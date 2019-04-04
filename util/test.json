@@ -1,0 +1,265 @@
+{
+    "tables": [{
+            "x": 0.20668696,
+            "y": 0.4121105,
+            "size": 40,
+            "seats": 8,
+            "type": "image",
+            "cost": 1050,
+            "daily_upkeep": 1,
+            "name": "Table 0",
+            "attributes": {
+                "type": "image",
+                "seats": 8,
+                "radius": 40,
+                "cost": 1050,
+                "daily_upkeep": 1,
+                "appliances": [],
+                "noisiness": 1,
+                "x": 0.20668696,
+                "y": 0.4121105
+            }
+        },
+        {
+            "x": 0.34346506,
+            "y": 0.7649156,
+            "size": 40,
+            "seats": 8,
+            "type": "image",
+            "cost": 1050,
+            "daily_upkeep": 1,
+            "name": "Table 1",
+            "attributes": {
+                "type": "image",
+                "seats": 8,
+                "radius": 40,
+                "cost": 1050,
+                "daily_upkeep": 1,
+                "appliances": [],
+                "noisiness": 1,
+                "x": 0.34346506,
+                "y": 0.7649156
+            }
+        },
+        {
+            "x": 0.5653495,
+            "y": 0.2501672,
+            "size": 40,
+            "seats": 2,
+            "type": "image",
+            "cost": 350,
+            "daily_upkeep": 1,
+            "name": "Table 2",
+            "attributes": {
+                "type": "image",
+                "seats": 2,
+                "radius": 40,
+                "cost": 350,
+                "daily_upkeep": 1,
+                "appliances": [{
+                    "name": "Mini Bar",
+                    "attributes": {
+                        "category": "cooking",
+                        "capabilities": {
+                            "alcohol": {
+                                "quality_mean": 0.5,
+                                "quality_std": 0.1,
+                                "cook_time_mult": 1,
+                                "cook_time_std": 0.1
+                            }
+                        },
+                        "difficulty_rating": 0.8,
+                        "cost": 4000,
+                        "daily_upkeep": 80,
+                        "reliability": 0.9,
+                        "noisiness": 0.01,
+                        "atmosphere": 0.1,
+                        "x": 0.5653495,
+                        "y": 0.2501672,
+                        "radius": 0
+                    }
+                }],
+                "noisiness": 10,
+                "x": 0.5653495,
+                "y": 0.2501672
+            }
+        },
+        {
+            "x": 0.6580547,
+            "y": 0.7070787,
+            "size": 70,
+            "seats": 6,
+            "type": "image",
+            "cost": 1050,
+            "daily_upkeep": 1,
+            "name": "Table 3",
+            "attributes": {
+                "type": "image",
+                "seats": 6,
+                "radius": 70,
+                "cost": 1050,
+                "daily_upkeep": 1,
+                "appliances": [{
+                    "name": "Full Bar",
+                    "attributes": {
+                        "category": "cooking",
+                        "capabilities": {
+                            "alcohol": {
+                                "quality_mean": 0.5,
+                                "quality_std": 0.1,
+                                "cook_time_mult": 1,
+                                "cook_time_std": 0.1
+                            }
+                        },
+                        "difficulty_rating": 0.8,
+                        "cost": 4000,
+                        "daily_upkeep": 80,
+                        "reliability": 0.9,
+                        "noisiness": 0.01,
+                        "atmosphere": 0.1,
+                        "x": 0.6580547,
+                        "y": 0.7070787,
+                        "radius": 0
+                    }
+                }],
+                "noisiness": 4,
+                "x": 0.6580547,
+                "y": 0.7070787
+            }
+        }
+    ],
+    "equipment": [{
+            "name": "Mini Bar",
+            "attributes": {
+                "category": "cooking",
+                "capabilities": {
+                    "alcohol": {
+                        "quality_mean": 0.5,
+                        "quality_std": 0.1,
+                        "cook_time_mult": 1,
+                        "cook_time_std": 0.1
+                    }
+                },
+                "difficulty_rating": 0.8,
+                "cost": 4000,
+                "daily_upkeep": 80,
+                "reliability": 0.9,
+                "noisiness": 0.01,
+                "atmosphere": 0.1,
+                "x": 0.5653495,
+                "y": 0.2501672,
+                "radius": 0
+            }
+        },
+        {
+            "name": "Full Bar",
+            "attributes": {
+                "category": "cooking",
+                "capabilities": {
+                    "alcohol": {
+                        "quality_mean": 0.5,
+                        "quality_std": 0.1,
+                        "cook_time_mult": 1,
+                        "cook_time_std": 0.1
+                    }
+                },
+                "difficulty_rating": 0.8,
+                "cost": 4000,
+                "daily_upkeep": 80,
+                "reliability": 0.9,
+                "noisiness": 0.01,
+                "atmosphere": 0.1,
+                "x": 0.6580547,
+                "y": 0.7070787,
+                "radius": 0
+            }
+        },
+        {
+            "name": "Basic Oven",
+            "attributes": {
+                "category": "cooking",
+                "capabilities": {
+                    "pizza": {
+                        "quality_mean": 0.5,
+                        "quality_std": 0.4,
+                        "cook_time_mult": 2,
+                        "cook_time_std": 0.1
+                    }
+                },
+                "path": "svgs/oven.svg",
+                "difficulty_rating": 0.2,
+                "cost": 300,
+                "daily_upkeep": 5,
+                "reliability": 0.2,
+                "noisiness": 0.1,
+                "atmosphere": 0.1,
+                "x": 0.78723407,
+                "y": 0.07665648,
+                "radius": 0
+            }
+        },
+        {
+            "name": "Microwave",
+            "attributes": {
+                "category": "cooking",
+                "capabilities": {
+                    "microwave": {
+                        "quality_mean": 0.1,
+                        "quality_std": 0.05,
+                        "cook_time_mult": 0.1,
+                        "cook_time_std": 0.05
+                    }
+                },
+                "path": "svgs/microwave.svg",
+                "difficulty_rating": 0.2,
+                "cost": 100,
+                "daily_upkeep": 5,
+                "reliability": 0.9,
+                "noisiness": 0.1,
+                "atmosphere": 0.1,
+                "x": 0.7841945,
+                "y": 0.37740836,
+                "radius": 0
+            }
+        },
+        {
+            "name": "Brick Pizza Oven",
+            "attributes": {
+                "category": "cooking",
+                "capabilities": {
+                    "pizza": {
+                        "quality_mean": 0.7,
+                        "quality_std": 0.1,
+                        "cook_time_mult": 0.8,
+                        "cook_time_std": 1
+                    },
+                    "brick_oven": {
+                        "quality_mean": 0.7,
+                        "quality_std": 0.1,
+                        "cook_time_mult": 0.8,
+                        "cook_time_std": 1
+                    }
+                },
+                "path": "svgs/kiln.svg",
+                "difficulty_rating": 0.8,
+                "cost": 4000,
+                "daily_upkeep": 10,
+                "reliability": 0.9,
+                "noisiness": 0.2,
+                "atmosphere": 0.6,
+                "x": 0.8206687,
+                "y": 0.6579173,
+                "radius": 0
+            }
+        }
+    ],
+    "staff": [{
+            "x": 0.44680852,
+            "y": 0.44681263
+        },
+        {
+            "x": 0.50303954,
+            "y": 0.7822667
+        }
+    ]
+}

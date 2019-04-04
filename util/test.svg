@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg baseProfile="full" height="30" version="1.1" width="60" xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs/>
+  <rect fill="rgb(255,255,255)" height="30" stroke="rgb(10,10,10)" width="60" x="0" y="0"/>
+  <image height="3" width="3" x="26.808511199999998" xlink:href="svgs/waiter.svg" y="13.4043789"/>
+  <image height="3" width="3" x="30.1823724" xlink:href="svgs/waiter.svg" y="23.468001"/>
+  <image height="8" width="8" x="12.4012176" xlink:href="svgs/8_table_round.svg" y="12.363315"/>
+  <image height="8" width="8" x="20.6079036" xlink:href="svgs/8_table_round.svg" y="22.947468"/>
+  <image height="5" width="5" x="33.92097" xlink:href="svgs/2_bar_rect.svg" y="7.5050159999999995"/>
+  <image height="5" width="5" x="39.483282" xlink:href="svgs/6_bar_rect.svg" y="21.212360999999998"/>
+  <image height="5" width="5" x="47.2340442" xlink:href="svgs/oven.svg" y="2.2996944"/>
+  <image height="5" width="5" x="47.05167" xlink:href="svgs/microwave.svg" y="11.322250799999999"/>
+  <image height="5" width="5" x="49.240122" xlink:href="svgs/kiln.svg" y="19.737519000000002"/>
+</svg>
