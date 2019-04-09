@@ -15,7 +15,7 @@
     "type": "image",
     "size": 30,
     "seats": 4,
-    "name": "Small Square Table",
+    "name": "Med Square Table",
     "svg_path": "svgs/4_table_rect.svg",
     "cost": 250,
     "daily_upkeep": 1,
@@ -62,6 +62,7 @@
     "appliances": [
       {
         "name": "Mini Bar",
+        "size":40,
         "attributes": {
           "category": "cooking",
           "capabilities": { "alcohol": {"quality_mean": 0.5, "quality_std" :0.1, "cook_time_mult":1, "cook_time_std":0.1} },
@@ -91,6 +92,7 @@
     "appliances": [
       {
         "name": "Full Bar",
+        "size": 70,
         "attributes": {
           "category": "cooking",
           "capabilities": { "alcohol": {"quality_mean": 0.5, "quality_std" :0.1, "cook_time_mult":1, "cook_time_std":0.1} },

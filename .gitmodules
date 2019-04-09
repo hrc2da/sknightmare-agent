@@ -1,0 +1,3 @@
+[submodule "sknightmare"]
+	path = sknightmare
+	url = https://github.com/hrc2da/sknightmare
