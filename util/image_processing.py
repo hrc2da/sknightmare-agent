@@ -27,6 +27,10 @@ class ImageWriter():
 
         #self.dwg.add(self.dwg.rect(insert = (0,0), size = (width, height), stroke = svgwrite.rgb(10, 10, 10), fill = svgwrite.rgb(255, 255, 255)))
 
+    def reset_image(self):
+        self.dwg = svgwrite.Drawing( size = (self.width, self.height))
+        self.imgarr = np.zeros((self.width,self.height))
+
     def load_maps(self, tables_fp, equipment_fp):
         with open(equipment_fp, 'r+') as infile:
             data = json.load(infile)

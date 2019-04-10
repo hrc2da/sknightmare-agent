@@ -13,8 +13,8 @@ class Environment:
             (4) Different Reward Functions
     '''
     Add = namedtuple('Add', ['catalog_id', 'x', 'y']) # catalog_id is the name in the catalog x and y are the target loc
-    Move = namedtuple('Move', ['layout_id', 'x', 'y'])
-    Remove = namedtuple('Remove', ['layout_id'])
+    Move = namedtuple('Move', ['layout_index', 'x', 'y']) #layout_index is the index of the item in the restaurant layout
+    Remove = namedtuple('Remove', ['layout_index'])
     RestaurantItem = namedtuple('RestaurantItem', ['type','item'])
 
     def __init__(self,width,height,tables,equipment,staff,table_fp="util/tables.json",eq_fp="util/items.json"):
@@ -61,13 +61,31 @@ class Environment:
                 self.catalog[eq["name"]] = self.RestaurantItem("equipment",equipment)
         self.catalog["staff"] = self.RestaurantItem("staff",{"x":-1, "y":-1})
 
-    def update_state(action):
+    def set_item_location(self,item,x,y):
+        item["x"] = x
+        item["y"] = y
+        item["attributes"]["x"] = x
+        item["attributes"]["y"] = y
+        return item
+
+    def update_state(self,action):
         # action is of type Add, Move, or Remove
         if type(action) == self.Add:
-            # get the item to add 
-        elif type(action) == self.Move:
+            item_to_add = self.catalog[action.catolog_id]
+            item_to_add.item = self.set_item_location(item_to_add.item,action.x,action.y)
+            self.restaurant_layout.append(item_to_add)    
+        
+        elif type(action) == self.Remove:
+            self.restaurant_layout.pop(action.layout_index)
 
         else:
+            # action is of type move
+            item_to_move = self.restaurant_layout[action.layout_index]
+            item_to_move.item = self.set_item_location(item_to_move.item,action.x,action.y)
+    
+    def update_image(self):
+        self.image_writer.reset_image()
+        self.image__writer.load_dicts(self.get_tables(),self.get_equipment(),self.get_staff())
 
 
     def network_space2image_space(x, y):
