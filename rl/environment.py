@@ -15,9 +15,10 @@ class Environment:
     Add = namedtuple('Add', ['catalog_id', 'x', 'y']) # catalog_id is the name in the catalog x and y are the target loc
     Move = namedtuple('Move', ['layout_index', 'x', 'y']) #layout_index is the index of the item in the restaurant layout
     Remove = namedtuple('Remove', ['layout_index'])
+    Nop = namedtuple('Nop',['reason','x','y']) #the source x and y
     RestaurantItem = namedtuple('RestaurantItem', ['type','item'])
 
-    def __init__(self,width,height,tables,equipment,staff,table_fp="util/tables.json",eq_fp="util/items.json"):
+    def __init__(self, width, height, tables, equipment, staff, table_fp="util/tables.json", eq_fp="util/items.json"):
         self.width = width
         self.height = height
         self.action_dims = 4
@@ -25,7 +26,7 @@ class Environment:
         self.initialize_state(tables,equipment,staff)
         self.populate_catalog()
 
-    def initialize_state(self,tables,equipment,staff):
+    def initialize_state(self, tables, equipment, staff):
         self.restaurant_layout = []
         for table in tables:
             self.restaurant_layout.append(self.RestaurantItem("table",table))
@@ -45,7 +46,7 @@ class Environment:
     def get_staff(self):
         return [layout_item.item for layout_item in self.restaurant_layout if layout_item.type = "staff"]
 
-    def populate_catalog(self,table_fp,eq_fp):
+    def populate_catalog(self, table_fp, eq_fp):
         self.catalog = {}
         self.table_names = []
         self.eq_names = []
@@ -61,14 +62,14 @@ class Environment:
                 self.catalog[eq["name"]] = self.RestaurantItem("equipment",equipment)
         self.catalog["staff"] = self.RestaurantItem("staff",{"x":-1, "y":-1})
 
-    def set_item_location(self,item,x,y):
+    def set_item_location(self, item, x, y):
         item["x"] = x
         item["y"] = y
         item["attributes"]["x"] = x
         item["attributes"]["y"] = y
         return item
 
-    def update_state(self,action):
+    def update_state(self, action):
         # action is of type Add, Move, or Remove
         if type(action) == self.Add:
             item_to_add = self.catalog[action.catolog_id]
@@ -88,12 +89,42 @@ class Environment:
         self.image__writer.load_dicts(self.get_tables(),self.get_equipment(),self.get_staff())
 
 
-    def network_space2image_space(x, y):
+    def network_space2image_space(self, x, y):
         return (x * 1.25, y * 1.25)
     
-    def image_space2network_space(x, y):
+    def image_space2network_space(self, x, y):
         return (x * 0.8, y * 0.8)
 
     # randomly sample the action space for a set of actions
-    def sample_action_space():
+    def sample_action_space(self):
         return np.random.rand(4)
+
+    def action2move(self, source_x, source_y, target_x, target_y):
+        # source_x and target_x are already rescaled
+        if source_x > 1 and target_x > 1:
+            # return no move (penalize this)
+            return Nop('move within staging',source_x,source_y)
+        elif source_x > 1:
+            # this is an add
+            index,item = self.find_in_catalog(source_x, source_y)
+            return Add(item.item["name"],target_x,target_y) # why don't we just pass the actual item????
+
+        elif target_x > 1:
+            # this is a remove
+            index,item = self.find_in_layout(source_x, source_y)
+            return Remove(index)
+
+        else:
+            # it's a straight move
+            index,item = self.find_in_layout(source_x, source_y)
+            return Move(index,target_x,target_y)
+    
+    def find_in_catalog(self,x,y):
+        index = None
+        item = None
+        return index,item
+    
+    def find_in_layout(self,x,y):
+        index = None
+        item = None
+        return index,item
