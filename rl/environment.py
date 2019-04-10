@@ -61,6 +61,18 @@ class Environment:
                 self.eq_names.append(eq["name"])
                 self.catalog[eq["name"]] = self.RestaurantItem("equipment",equipment)
         self.catalog["staff"] = self.RestaurantItem("staff",{"x":-1, "y":-1})
+        self.divisions = {}
+        num_items = len(self.catalog)
+        self.increment = 1 / num_items
+        index = 0
+        for key, item in self.catalog.items():
+            self.divisions[index] = key
+            index += self.increment
+    
+    def get_item_from_source_y(self, y):
+        # assume y is within [0,1]
+        index = int(source_y / self.increment)
+        return self.catalog[self.divisions[index]]
 
     def set_item_location(self, item, x, y):
         item["x"] = x
@@ -120,8 +132,8 @@ class Environment:
             return Move(index,target_x,target_y)
     
     def find_in_catalog(self,x,y):
-        index = None
-        item = None
+        index = None # why do we need index
+        item = self.get_item_from_source_y(y)
         return index,item
     
     def find_in_layout(self,x,y):
