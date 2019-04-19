@@ -84,7 +84,7 @@ class ImageWriter():
 
     def draw_staff(self, staff):
         for waiter in staff:
-            self.dwg.add(self.dwg.image(href=os.path.join(self.bp,"svgs/waiter.svg"), insert = (self.width * waiter['x'], self.height * waiter['y']), size = (4,4)))
+            self.dwg.add(self.dwg.image(href=os.path.join(self.bp,"svgs/waiter.svg"), insert = (self.width * waiter['x'], self.height * waiter['y']), size = (8,8)))
             x = int(self.width*waiter['x'])
             y = int(self.height*waiter['y'])
             self.imgarr[x,y] = self.objects["staff"]
@@ -99,10 +99,10 @@ class ImageWriter():
 
 
             if table['appliances'] == []:
-                self.dwg.add(self.dwg.image(href=os.path.join(self.bp,"svgs/"+str(table['seats'])+"_table_round.svg"), insert = (self.width * table['x'], self.height * table['y']), size = (table['seats'],table['seats'])))
+                self.dwg.add(self.dwg.image(href=os.path.join(self.bp,"svgs/"+str(table['seats'])+"_table_round.svg"), insert = (self.width * table['x'], self.height * table['y']), size = (table['seats']*2,table['seats']*2)))
                 
             else:
-                self.dwg.add(self.dwg.image(href=os.path.join(self.bp,"svgs/"+str(table['seats'])+"_bar_rect.svg"), insert = (self.width * table['x'], self.height * table['y']), size = (table['seats'],table['seats'])))
+                self.dwg.add(self.dwg.image(href=os.path.join(self.bp,"svgs/"+str(table['seats'])+"_bar_rect.svg"), insert = (self.width * table['x'], self.height * table['y']), size = (table['seats']*2,table['seats']*2)))
     
     def draw_equipment(self, equipment):
         for item in equipment:
@@ -111,7 +111,7 @@ class ImageWriter():
             x = int(self.width * item['attributes']['x'])
             y = int(self.height * item['attributes']['y'])
             self.imgarr[x,y] = self.objects[item['name']]
-            self.dwg.add(self.dwg.image(href=os.path.join(self.bp,self.item_svg_map[item['name']]['path']), insert = (self.width * item['attributes']['x'], self.height * item['attributes']['y']), size = (4, 4)))
+            self.dwg.add(self.dwg.image(href=os.path.join(self.bp,self.item_svg_map[item['name']]['path']), insert = (self.width * item['attributes']['x'], self.height * item['attributes']['y']), size = (8, 8)))
 
 
 if __name__ == "__main__":

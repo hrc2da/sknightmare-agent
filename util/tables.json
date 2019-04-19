@@ -2,6 +2,7 @@
   "1": {
     "type": "image",
     "size": 20,
+    "radius": 20,
     "seats": 2,
     "name": "Small Square Table",
     "svg_path": "svgs/2_table_rect.svg",
@@ -14,6 +15,7 @@
   "2": {
     "type": "image",
     "size": 30,
+    "radius": 30,
     "seats": 4,
     "name": "Med Square Table",
     "svg_path": "svgs/4_table_rect.svg",
@@ -27,6 +29,7 @@
   "5": {
     "type": "image",
     "size": 30,
+    "radius": 30,
     "seats": 4,
     "name": "Med Round Table",
     "svg_path": "svgs/4_table_round.svg",
@@ -39,6 +42,7 @@
   "6": {
     "type": "image",
     "size": 40,
+    "radius": 40,
     "seats": 8,
     "name": "Large Round Table",
     "svg_path": "svgs/8_table_round.svg",
@@ -52,6 +56,7 @@
   "9": {
     "type": "image",
     "size": 40,
+    "radius": 40,
     "seats": 2,
     "name": "Mini Bar",
     "svg_path": "svgs/2_bar_rect.svg",
@@ -63,6 +68,7 @@
       {
         "name": "Mini Bar",
         "size":40,
+        "radius":40,
         "attributes": {
           "category": "cooking",
           "capabilities": { "alcohol": {"quality_mean": 0.5, "quality_std" :0.1, "cook_time_mult":1, "cook_time_std":0.1} },
@@ -82,6 +88,7 @@
   "10": {
     "type": "image",
     "size": 70,
+    "radius": 70,
     "seats": 6,
     "name": "Full Bar",
     "svg_path": "svgs/6_bar_rect.svg",
@@ -93,6 +100,7 @@
       {
         "name": "Full Bar",
         "size": 70,
+        "radius": 70,
         "attributes": {
           "category": "cooking",
           "capabilities": { "alcohol": {"quality_mean": 0.5, "quality_std" :0.1, "cook_time_mult":1, "cook_time_std":0.1} },

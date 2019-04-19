@@ -8,18 +8,33 @@ class SKOutcomes:
     def __init__(self):
         self.outcomes = {
             'revenue': {'bounds':[-1e9,1e9], 'val': 0.0},
-            'upfront_cost': {'bounds':[-1e6,1e6], 'val': 0.0},
-            'rating': {'bounds':[0.0,1.0], 'val': 0.5},
-            'noisiness': {'bounds': [0,1e6], 'val': 0},
-            'busyness': {'bounds': [0,1e5], 'val': 0},
-            'service': {'bounds': [0.0,1.0], 'val':0.5},
-            'price_range': {'bounds': [0.0,1.0], 'val':0.5}
+            'profit': {'bounds':[-1e6,1e6], 'val': 0.0},
+            'avg_noise': {'bounds': [0,1e6], 'val': 0},
+            'daily_customers': {'bounds': [0,1e5], 'val': 0},
+            'service_rating': {'bounds': [0.0,1.0], 'val':0.5},
+            'avg_check': {'bounds': [0.0,1e3], 'val':0.5},
+            'satisfaction': {'bounds': [0.0,1.0], 'val':0.5}
         }
         self.preferences = np.random.rand(len(self.outcomes))
     def get_bounds(self):
         return np.array([self.outcomes[o]['bounds'] for o in self.outcomes])
-
-    def get_outcomes(self):
+    def get_preference_keys(self):
+        return self.outcomes.keys()
+    def get_outcomes(self,outcomes=None):
+        if outcomes != None:
+            features = self.get_preference_keys()
+            outcome_vec = []
+            for f in features:
+                try:
+                    val = outcomes[f]
+                except KeyError as e:
+                    print("The output and preference vectors don't match!")
+                    raise(e)
+                if type(val) is list:
+                    outcome_vec.append(val[0]) # assume the first value is the one we want (e.g. mean, std)
+                else:
+                    outcome_vec.append(val)
+            return np.array(outcome_vec)
         return np.array([self.outcomes[o]['val'] for o in self.outcomes])
     def get_preferences(self):
         return self.preferences
@@ -32,6 +47,7 @@ class PreferenceDummy:
         '''
             preferences should be an np array of preference weights
         '''
+        self.schema = outcomes_schema
         self.preferences = outcomes_schema.get_preferences()
         self.bounds = outcomes_schema.get_bounds()
     
@@ -41,9 +57,14 @@ class PreferenceDummy:
     def rotate_preferences(self,n_shift):
         self.preferences = np.roll(self.preferences,n_shift)
 
-    def rate(self,design):
+    def rate(self,outcomes):
         #TODO: normalize based on bounds
-        return np.dot(self.preferences, design)   
+        print("OUTCOMES:")
+        print(outcomes)
+        print("PREFERENCES:")
+        print(self.preferences)
+        
+        return np.dot(self.preferences, outcomes)
 
 class SKBayesOpt:
     def __init__(self,evaluator,init_points = []):
@@ -64,19 +85,20 @@ class SKBayesOpt:
             # only fit once we've loaded all the data
             x,y = init_points[-1]
             self.optimizer.tell(list(x),y,fit=True)
-        print(self.optimizer.models[0].get_params())
+        #print(self.optimizer.models[0].get_params())
     
     def get_reward(self, outcomes):
+        outcomes = self.evaluator.schema.get_outcomes(outcomes)
         # check if the outcomes surpass the AF
-        if acquisition_check() :
+        if self.acquisition_check(outcomes):
             reward = self.evaluator.rate(outcomes)
-            self.optimizer.tell(outcomes, reward, fit=True)
+            self.optimizer.tell(list(outcomes), reward, fit=True)
         else:
             reward = self.optimizer.base_estimator_.predict(outcomes)
         return reward
         
     def acquisition_check(self, outcomes):
-        return true
+        return True
     def objective(self,design):
         # ask the user for a rating of a design
         # for the PreferenceDummy, return immediately. For a real human, this would block and return when they answer
