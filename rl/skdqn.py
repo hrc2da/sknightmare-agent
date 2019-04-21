@@ -12,16 +12,21 @@ import csv
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("save_name", nargs='?', default='empty')
+    parser.add_argument("--saved", nargs='?', default='empty')
+    parser.add_argument("--episodes", nargs='?', default='empty')
     args = parser.parse_args()
-    if args.save_name == 'empty':
+    if args.saved == 'empty':
         saved_model = None
         saved_weights = None
     else:
-        base = args.save_name
+        base = args.saved
         print("Using save name {}".format(base))
         saved_model = base + ".yaml"
         saved_weights = base + ".h5"
+    if args.episodes == 'empty':
+        num_episodes = 30
+    else:
+        num_episodes = int(args.episodes)
     outcomes = SKOutcomes()
     preferences = [0.5,0.7,0.05,0.5,0.3,0.3,0.4]
     pd = PreferenceDummy(outcomes,preferences)
@@ -29,7 +34,7 @@ if __name__ == "__main__":
     env = Environment(width = 65, height = 34, tables = [], equipment = [], staff = [], reward_model = bo)
     qa = QAgent(input_shape = (65,34),saved_model=saved_model, saved_weights=saved_weights)
     #qa = QAgent(input_shape = (65,34))
-    episodes = 30
+    episodes = num_episodes
     base_iterations_per_ep = 2 
     max_iterations_per_ep = 20
     restaurants = []
