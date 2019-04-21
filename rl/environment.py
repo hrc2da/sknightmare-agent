@@ -101,10 +101,10 @@ class Environment:
         return self.get_state()
 
     def set_name(self,obj,obj_type):
-        if obj_type = "table":
+        if obj_type == "table":
             uid = table_uid
             table_uid += 1
-        elif obj_type = "equipment":
+        elif obj_type == "equipment":
             uid = eq_uid
             eq_uid += 1
         else:
