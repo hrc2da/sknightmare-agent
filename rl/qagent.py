@@ -27,7 +27,7 @@ class QAgent:
     ]
     def __init__(self,input_shape,saved_model=None,saved_weights=None):
         self.eps = 1.0
-        self.eps_decay = 0.99
+        self.eps_decay = 0.999
         self.eps_min = 0.01
         self.discount_rate = 0.9
         self.width,self.height = input_shape
