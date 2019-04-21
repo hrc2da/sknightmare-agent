@@ -14,14 +14,15 @@ if __name__ == "__main__":
     #qa = QAgent(input_shape = (65,34),saved_model="skdqn.yaml", saved_weights="skdqn.h5")
     qa = QAgent(input_shape = (65,34))
     episodes = 10
-    iterations_per_ep = 20
+    base_iterations_per_ep = 2 
+    max_iterations_per_ep = 100
     restaurants = []
     state = env.reset(init_state = None) # implement this!!!
     for e in range(episodes):
         print("Episode {}".format(e))
         state = env.reset(init_state = None)
         restaurants.append((state,None,0))
-        for i in range(iterations_per_ep):
+        for i in range(min(base_iterations_per_ep * e, max_iterations_per_ep)): # scale up the number of episodes as we learn more hopefully
             q_vals = qa.predict_q(state.image)
             action = qa.get_action(q_vals[0])
             next_state, reward = env.step(action)
