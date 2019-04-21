@@ -108,7 +108,7 @@ class Environment:
                 table["attributes"] = {}
                 for attr in table:
                     table["attributes"][attr] = table[attr]
-                self.restaurant_layout.append(self.RestaurantItem("table",table))
+            self.restaurant_layout.append(self.RestaurantItem("table",table))
         for eq in equipment:
         #     eq["x"] = -1
         #     eq["y"] = -1
@@ -288,7 +288,7 @@ class Environment:
             try:
                 r = Restaurant("Sophie's Kitchen", self.get_equipment(new_layout), self.get_tables(new_layout), self.get_staff(new_layout), verbose=False)
             except ValueError as e:
-                print("Missing minumum of tables or equipment")
+                print("Missing minumum of tables or equipment: ",e)
                 return -1e8
             r.simulate(days=14)
             print("SIMULATING RESTAURANT!!!")
