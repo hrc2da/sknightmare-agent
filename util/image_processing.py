@@ -4,9 +4,6 @@ from cairosvg import svg2png
 from scipy import misc
 import cv2 as cv
 import numpy as np
-import matplotlib as mpl
-mpl.use('TkAgg')
-from matplotlib import pyplot as plt
 import time
 import os
 from PIL import Image
@@ -16,6 +13,7 @@ from skimage.draw import circle
 
 class ImageWriter():
     def __init__(self, width, height, base_fp='.', tables_fn='tables.json', equipment_fn='items.json'):
+        self.name_delimiter = "___"
         self.width = width
         self.height = height
         self.bp = base_fp
@@ -90,9 +88,10 @@ class ImageWriter():
             self.imgarr[x,y] = self.objects["staff"]
     def draw_tables(self, tables):
         for table in tables:
+            table_name = table['name'].split(self.name_delimiter)[0]
             x = int(self.width * table['x'])
             y = int(self.height * table['y'])
-            self.imgarr[x,y] = self.objects[table['name']]
+            self.imgarr[x,y] = self.objects[table_name]
             # if("Round" in table["name"]):
             #     rr,cc = circle(x,y,table["size"]/2)
             #     self.imgarr[rr,cc] = self.objects[table['name']]
@@ -106,12 +105,13 @@ class ImageWriter():
     
     def draw_equipment(self, equipment):
         for item in equipment:
-            if item['name'] in ['Mini Bar', 'Full Bar']:
+            item_name = item['name'].split(self.name_delimiter)[0]
+            if item_name in ['Mini Bar', 'Full Bar']:
                 continue
             x = int(self.width * item['attributes']['x'])
             y = int(self.height * item['attributes']['y'])
-            self.imgarr[x,y] = self.objects[item['name']]
-            self.dwg.add(self.dwg.image(href=os.path.join(self.bp,self.item_svg_map[item['name']]['path']), insert = (self.width * item['attributes']['x'], self.height * item['attributes']['y']), size = (8, 8)))
+            self.imgarr[x,y] = self.objects[item_name]
+            self.dwg.add(self.dwg.image(href=os.path.join(self.bp,self.item_svg_map[item_name]['path']), insert = (self.width * item['attributes']['x'], self.height * item['attributes']['y']), size = (8, 8)))
 
 
 if __name__ == "__main__":

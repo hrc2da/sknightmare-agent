@@ -28,6 +28,7 @@ class Environment:
     State = recordclass('State', ['layout','image', 'png'])
     mistake_threshold = 0
     SIZE_SCALAR = 15 # this is just to adjust for the fact that our items are relatively too big for our layout size
+    name_delimiter = "___"
 
     def __init__(self, width, height, tables, equipment, staff, reward_model, table_fp="util/tables.json", eq_fp="util/items.json"):
         self.width = width
@@ -112,7 +113,7 @@ class Environment:
             self.staff_uid += 1    
         if "name" not in obj:
             obj["name"] = obj_type
-        obj["name"] += str(uid)
+        obj["name"] += self.name_delimiter+str(uid)
         return obj
 
     def initialize_state(self, tables, equipment, staff):
@@ -193,7 +194,7 @@ class Environment:
         # action is of type Add, Move, or Remove
         if type(action) == self.Add:
             print("Adding")
-            item_to_add = self.catalog[action.catalog_id]
+            item_to_add = deepcopy(self.catalog[action.catalog_id]) #deep copy so we don't modify actual catalog
             item_to_add.item = self.set_item_location(item_to_add.item,action.x,action.y)
             item_to_add.item = self.set_name(item_to_add.item,item_to_add.type)
             print("Adding this: ",item_to_add)
@@ -245,7 +246,6 @@ class Environment:
         elif source_x > 0.8:
             # this is an add
             index,item = self.find_in_catalog(source_x, source_y)
-            print(item)
             return self.Add(item.item["name"],target_x,target_y) # why don't we just pass the actual item????
 
         elif target_x > 0.8:
