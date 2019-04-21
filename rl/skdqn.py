@@ -22,7 +22,7 @@ if __name__ == "__main__":
         print("Episode {}".format(e))
         state = env.reset(init_state = None)
         restaurants.append((state,None,0))
-        for i in range(min(base_iterations_per_ep * e, max_iterations_per_ep)): # scale up the number of episodes as we learn more hopefully
+        for i in range(min(base_iterations_per_ep * (e+1), max_iterations_per_ep)): # scale up the number of episodes as we learn more hopefully
             q_vals = qa.predict_q(state.image)
             action = qa.get_action(q_vals[0])
             next_state, reward = env.step(action)
