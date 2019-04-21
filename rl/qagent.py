@@ -10,7 +10,7 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__))+'/../')
 from util.image_processing import ImageWriter
-from util.generate_restaurants import RestaurantGenerator
+#from util.generate_restaurants import RestaurantGenerator
 
 
 Action = namedtuple('Action', 'action x y')
