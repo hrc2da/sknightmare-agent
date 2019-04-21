@@ -110,7 +110,9 @@ class Environment:
         else:
             uid = self.staff_uid
             self.staff_uid += 1    
-        obj.name += uid
+        if "name" not in obj:
+            obj["name"] = obj_type
+        obj["name"] += uid
         return obj
 
     def initialize_state(self, tables, equipment, staff):
