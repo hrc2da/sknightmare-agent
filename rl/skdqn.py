@@ -6,6 +6,7 @@ from rl.qagent import QAgent
 from bayesopt.bo import SKOutcomes, PreferenceDummy, SKBayesOpt
 import time
 import argparse
+import numpy as np
 
 if __name__ == "__main__":
 
@@ -55,6 +56,13 @@ if __name__ == "__main__":
         stats.append(episode_stats)
         qa.retrain(num_iter)
     qa.save_model("skdqn")
+    with open("skdn_{}.log".format(time.time()),"w+") as logfile:
+        for e in episode_stats:
+            max_reward = max(rewards)
+            mean_reward = np.mean(rewards)
+            logfile.write(mean_reward,max_reward,episode_stats["mistakes"],episode_stats["nops"],episode_stats["actions"])
+        
+
 
 
 
