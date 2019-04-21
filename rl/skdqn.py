@@ -22,14 +22,15 @@ if __name__ == "__main__":
         print("Episode {}".format(e))
         state = env.reset(init_state = None)
         restaurants.append((state,None,0))
-        for i in range(min(base_iterations_per_ep * (e+1), max_iterations_per_ep)): # scale up the number of episodes as we learn more hopefully
+        num_iter = min(base_iterations_per_ep * (e+1), max_iterations_per_ep)
+        for i in range(num_iter): # scale up the number of episodes as we learn more hopefully
             q_vals = qa.predict_q(state.image)
             action = qa.get_action(q_vals[0])
             next_state, reward = env.step(action)
             restaurants.append((next_state,action,reward))
             qa.remember(state.image, action, reward, next_state.image)
         next_state.png.show()
-        qa.retrain(iterations_per_ep)
+        qa.retrain(num_iter)
     qa.save_model("skdqn")
 
 
