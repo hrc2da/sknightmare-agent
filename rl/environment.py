@@ -1,7 +1,7 @@
 import numpy as np 
 import math
 from collections import namedtuple
-from recordclass import recordclass
+p
 from copy import copy, deepcopy
 import json
 
@@ -100,21 +100,40 @@ class Environment:
                                 staff = [{"name": "staff","x":0.5,"y":0.5, "attributes":{"x":0.5,"y":0.5}}])
         return self.get_state()
 
+    def set_name(self,obj,obj_type):
+        if obj_type = "table":
+            uid = table_uid
+            table_uid += 1
+        elif obj_type = "equipment":
+            uid = eq_uid
+            eq_uid += 1
+        else:
+            uid = staff_uid
+            staff_uid += 1    
+        obj.name += uid
+        return obj
+
     def initialize_state(self, tables, equipment, staff):
+        self.table_uid = 0
+        self.eq_uid = 0
+        self.staff_uid = 0
         self.restaurant_layout = []
         for table in tables:
             if "attributes" not in table:
                 #table["attributes"] = {"x":table["x"], "y":table["y"]}
                 table["attributes"] = {}
                 for attr in table:
+                    table = self.set_name(table,"table")
                     table["attributes"][attr] = table[attr]
             self.restaurant_layout.append(self.RestaurantItem("table",table))
         for eq in equipment:
         #     eq["x"] = -1
         #     eq["y"] = -1
+            eq = self.set_name(eq,"equipment")
             self.restaurant_layout.append(self.RestaurantItem("equipment",eq))
         for s in staff:
             s["name"] = "staff"
+            s = self.set_name(s,"staff")
             self.restaurant_layout.append(self.RestaurantItem("staff",s))
         self.image_writer.load_dicts(tables,equipment,staff)
         self.restaurant_image = self.image_writer.get_nparr()
@@ -174,6 +193,7 @@ class Environment:
             print("Adding")
             item_to_add = self.catalog[action.catalog_id]
             item_to_add.item = self.set_item_location(item_to_add.item,action.x,action.y)
+            item_to_add.item = self.set_name(item_to_add.item,item_to_add.type)
             print("Adding this: ",item_to_add)
             self.restaurant_layout.append(item_to_add)    
         
