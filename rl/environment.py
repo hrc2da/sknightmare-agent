@@ -1,7 +1,7 @@
 import numpy as np 
 import math
 from collections import namedtuple
-p
+from recordclass import recordclass
 from copy import copy, deepcopy
 import json
 
