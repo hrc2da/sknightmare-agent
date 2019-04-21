@@ -328,7 +328,7 @@ class Environment:
         self.update_image()
         new_state = self.get_state()
         reward = self.get_reward(old_state, new_state, move)
-        if reward < 0:
+        if reward <= 1e-6:
             # for any penalty, revert the state
             print("REVERTING!!!!!!!")
             self.set_state(old_state)
