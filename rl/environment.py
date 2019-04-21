@@ -2,6 +2,7 @@ import numpy as np
 import math
 from collections import namedtuple
 from recordclass import recordclass
+from copy import copy, deepcopy
 import json
 
 import os
@@ -68,32 +69,33 @@ class Environment:
                                     "appliances": []
                                 }],
                                 equipment = [{
-                                    "name": "Pianist",
-                                    "type": "image",
-                                    "size": 25,
-                                    "path": "svgs/piano.svg",
-                                    "x": 0.2,
-                                    "y": 0.2,
-                                    "attributes": {
-                                        "category": "entertainment",
-                                        "capabilities": {
-                                            "noise_dampening": 1
-                                        },
-                                        "path": "svgs/piano.svg",
-                                        "cook_time_mean": 1,
-                                        "cook_time_std": 0.1,
-                                        "quality_mean": 0.9,
-                                        "quality_std": 0.1,
-                                        "difficulty_rating": 1,
-                                        "cost": 100,
-                                        "daily_upkeep": 200,
-                                        "reliability": 0.9,
-                                        "noisiness": 0.3,
-                                        "atmosphere": 0.6,
+                                        "name": "Basic Oven",
+                                        "type": "image",
+                                        "size": 25,
+                                        "path": "svgs/oven.svg",
                                         "x": 0.2,
                                         "y": 0.2,
-                                        "radius": 0
-                                    }
+                                        "attributes": {
+                                            "category": "cooking",
+                                            "capabilities": {
+                                                "pizza": {
+                                                "quality_mean": 0.5,
+                                                "quality_std": 0.4,
+                                                "cook_time_mult": 2,
+                                                "cook_time_std": 0.1
+                                                }
+                                            },
+                                            "path": "svgs/oven.svg",
+                                            "difficulty_rating": 0.2,
+                                            "cost": 300,
+                                            "daily_upkeep": 5,
+                                            "reliability": 0.2,
+                                            "noisiness": 0.1,
+                                            "atmosphere": 0.1,
+                                            "x": 0.2,
+                                            "y": 0.2,
+                                            "radius": 25
+                                        }
                                 }],
                                 staff = [{"name": "staff","x":0.5,"y":0.5, "attributes":{"x":0.5,"y":0.5}}])
         return self.get_state()
@@ -299,7 +301,7 @@ class Environment:
     def step(self,act_vect):
         s_x, s_y, t_x, t_y = self.act_vect2act_coords(*act_vect)
         move = self.action2move(s_x, s_y, t_x, t_y)
-        old_state = self.get_state()
+        old_state = deepcopy(self.get_state())
         self.update_state(move)
         self.update_image()
         new_state = self.get_state()
