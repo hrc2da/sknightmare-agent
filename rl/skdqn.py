@@ -7,6 +7,7 @@ from bayesopt.bo import SKOutcomes, PreferenceDummy, SKBayesOpt
 import time
 import argparse
 import numpy as np
+import csv
 
 if __name__ == "__main__":
 
@@ -22,14 +23,15 @@ if __name__ == "__main__":
         saved_model = base + ".yaml"
         saved_weights = base + ".h5"
     outcomes = SKOutcomes()
-    pd = PreferenceDummy(outcomes)
+    preferences = [0.5,0.7,0.05,0.5,0.3,0.3,0.4]
+    pd = PreferenceDummy(outcomes,preferences)
     bo = SKBayesOpt(pd)
     env = Environment(width = 65, height = 34, tables = [], equipment = [], staff = [], reward_model = bo)
     qa = QAgent(input_shape = (65,34),saved_model=saved_model, saved_weights=saved_weights)
     #qa = QAgent(input_shape = (65,34))
-    episodes = 10
+    episodes = 30
     base_iterations_per_ep = 2 
-    max_iterations_per_ep = 100
+    max_iterations_per_ep = 20
     restaurants = []
     state = env.reset(init_state = None) # implement this!!!
     stats = []
@@ -56,11 +58,12 @@ if __name__ == "__main__":
         stats.append(episode_stats)
         qa.retrain(num_iter)
     qa.save_model("skdqn")
-    with open("skdn_{}.log".format(time.time()),"w+") as logfile:
-        for e in episode_stats:
-            max_reward = max(rewards)
-            mean_reward = np.mean(rewards)
-            logfile.write(mean_reward,max_reward,episode_stats["mistakes"],episode_stats["nops"],episode_stats["actions"])
+    with open("skdnlog_{}.csv".format(time.time()),"w+") as logfile:
+        logwriter = csv.writer(logfile,delimiter=',')
+        for e in stats:
+            max_reward = max(e["rewards"])
+            mean_reward = np.mean(e["rewards"])
+            logwriter.writerow([mean_reward,max_reward,e["mistakes"],e["nops"],e["actions"]])
         
 
 

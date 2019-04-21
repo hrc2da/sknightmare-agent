@@ -43,12 +43,15 @@ class PreferenceDummy:
     '''
         in the absence of a user, supply rewards based on a preference profile
     '''
-    def __init__(self,outcomes_schema):
+    def __init__(self,outcomes_schema,preferences=None):
         '''
             preferences should be an np array of preference weights
         '''
         self.schema = outcomes_schema
-        self.preferences = outcomes_schema.get_preferences()
+        if preferences == None:
+            self.preferences = outcomes_schema.get_preferences()
+        else:
+            self.preferences = preferences
         self.bounds = outcomes_schema.get_bounds()
     
     def get_outcome_bounds(self):
