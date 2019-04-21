@@ -102,14 +102,14 @@ class Environment:
 
     def set_name(self,obj,obj_type):
         if obj_type == "table":
-            uid = table_uid
-            table_uid += 1
+            uid = self.table_uid
+            self.table_uid += 1
         elif obj_type == "equipment":
-            uid = eq_uid
-            eq_uid += 1
+            uid = self.eq_uid
+            self.eq_uid += 1
         else:
-            uid = staff_uid
-            staff_uid += 1    
+            uid = self.staff_uid
+            self.staff_uid += 1    
         obj.name += uid
         return obj
 
