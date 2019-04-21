@@ -60,6 +60,7 @@ if __name__ == "__main__":
     qa.save_model("skdqn")
     with open("skdnlog_{}.csv".format(time.time()),"w+") as logfile:
         logwriter = csv.writer(logfile,delimiter=',')
+        logwriter.writerow(["mean_reward","max_reward","mistakes","nops","actions"])
         for e in stats:
             max_reward = max(e["rewards"])
             mean_reward = np.mean(e["rewards"])
