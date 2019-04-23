@@ -73,8 +73,9 @@ if __name__ == "__main__":
             mean_reward = np.mean(e["rewards"])
             logwriter.writerow([mean_reward,max_reward,e["mistakes"],e["nops"],e["actions"]])
     with open("allstars_{}.pkl".format(time.time()),"wb+") as picklefile:
+        print("THIS MANY ALLSTARS: {}".format(len(restaurants)))
         pickle.dump(restaurants,picklefile)
-
+    print("finished.")
         
 
 
