@@ -75,7 +75,7 @@ if __name__ == "__main__":
     with open("allstars_{}.pkl".format(time.time()),"wb+") as picklefile:
         print("THIS MANY ALLSTARS: {}".format(len(restaurants)))
         #this needs to pickle
-        pickle.dump([(restaurant[0].layout,restaurant[2]) for restaurant in restaurants],picklefile)
+        pickle.dump(restaurant,picklefile)
     print("finished.")
         
 
