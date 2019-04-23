@@ -8,6 +8,7 @@ import time
 import argparse
 import numpy as np
 import csv
+import pickle
 
 if __name__ == "__main__":
 
@@ -44,13 +45,14 @@ if __name__ == "__main__":
         episode_stats = {"mistakes":0,"nops":0,"actions":0,"rewards":[]}
         print("Episode {}".format(e))
         state = env.reset(init_state = None)
-        restaurants.append((state,None,0))
+        #restaurants.append((state,None,0))
         num_iter = min(base_iterations_per_ep * (e+1), max_iterations_per_ep)
         for i in range(num_iter): # scale up the number of episodes as we learn more hopefully
             q_vals = qa.predict_q(state.image)
             action = qa.get_action(q_vals[0])
             next_state, reward = env.step(action)
-            restaurants.append((next_state,action,reward))
+            if reward > 0:
+                restaurants.append((next_state,action,reward))
             qa.remember(state.image, action, reward, next_state.image)
             if reward == -1e6:
                 episode_stats["mistakes"] += 1
@@ -70,6 +72,9 @@ if __name__ == "__main__":
             max_reward = max(e["rewards"])
             mean_reward = np.mean(e["rewards"])
             logwriter.writerow([mean_reward,max_reward,e["mistakes"],e["nops"],e["actions"]])
+    with open("allstars_{}.pkl".format(time.time()),"w+") as picklefile:
+        pickle.dump(restaruants,picklefile)
+
         
 
 
