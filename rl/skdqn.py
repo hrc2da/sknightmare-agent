@@ -53,7 +53,7 @@ if __name__ == "__main__":
             next_state, reward = env.step(action)
             if reward > 5000:
                 restaurants.append((next_state,action,reward))
-                next_state.png.save(str(reward)+".png")
+                next_state.png.save("/content/"+str(reward)+".png")
             qa.remember(state.image, action, reward, next_state.image)
             if reward == -1e6:
                 episode_stats["mistakes"] += 1
