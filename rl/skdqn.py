@@ -51,8 +51,9 @@ if __name__ == "__main__":
             q_vals = qa.predict_q(state.image)
             action = qa.get_action(q_vals[0])
             next_state, reward = env.step(action)
-            if reward > 0:
+            if reward > 5000:
                 restaurants.append((next_state,action,reward))
+                next_state.png.save(str(reward),".png")
             qa.remember(state.image, action, reward, next_state.image)
             if reward == -1e6:
                 episode_stats["mistakes"] += 1
