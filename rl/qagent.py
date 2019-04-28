@@ -73,7 +73,7 @@ class QAgent:
         # an alternative would be to have the "0" mask values be some huge negative number that we just subtract
         target_field = target_mask * q_vals[dim:]
         source_loc = np.argmax(source_field)
-        target_loc = np.argmax(target_mask) + dim
+        target_loc = np.argmax(target_field) + dim
         return source_loc, target_loc
 
     def predict_q(self, state):
@@ -96,7 +96,7 @@ class QAgent:
         source_mask[:,staging_threshold:] = True
 
         add_mask = state == 0 # or state is in staging is false ) #
-        source_mask[:,staging_threshold:] = False
+        add_mask[:,staging_threshold:] = False
 
         move_mask = state == 0 #can move anywhere that's not blocked -- staging is remove
 
