@@ -49,7 +49,8 @@ if __name__ == "__main__":
         num_iter = min(base_iterations_per_ep * (e+1), max_iterations_per_ep)
         for i in range(num_iter): # scale up the number of episodes as we learn more hopefully
             q_vals = qa.predict_q(state.image)
-            action = qa.get_action(q_vals[0])
+            source_mask,target_mask = qa.get_mask(state.image)
+            action = qa.get_action(q_vals[0],source_mask,target_mask)
             next_state, reward = env.step(action)
             if reward > 5000:
                 restaurants.append((next_state,action,reward))

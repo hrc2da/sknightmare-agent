@@ -230,11 +230,13 @@ class Environment:
         return np.random.rand(4)
 
     def act_vect2act_coords(self,source,target):
-        source_x = source // self.height / self.width #converting to 0 to 1
-        source_y = source % self.height /self.height # converting to 0 to 1
+        #depending on if flatten goes by rows or columns, divide by width or height
+        #the np flatten seems to go by rows, so I'll go by that.
+        source_x = source // self.width / self.width #converting to 0 to 1
+        source_y = source % self.width /self.height # converting to 0 to 1
         target = target-self.width*self.height
-        target_x = target // self.height / self.width
-        target_y = target % self.height / self.height
+        target_x = target // self.width / self.width
+        target_y = target % self.width / self.height
         return source_x, source_y, target_x, target_y
 
 

@@ -67,10 +67,13 @@ class QAgent:
             yaml_file.write(self.model.to_yaml())
         self.model.save_weights(filename+".h5")
 
-    def get_action(self,q_vals):
+    def get_action(self,q_vals,source_mask,target_mask):
         dim = self.width*self.height
-        source_loc = np.argmax(q_vals[0:dim])
-        target_loc = np.argmax(q_vals[dim:]) + dim
+        source_field = source_mask * q_vals[0:dim] # this is assuming q-vals stay positive (if the mask is 1 for valid and 0 for not)
+        # an alternative would be to have the "0" mask values be some huge negative number that we just subtract
+        target_field = target_mask * q_vals[dim:]
+        source_loc = np.argmax(source_field)
+        target_loc = np.argmax(target_mask) + dim
         return source_loc, target_loc
 
     def predict_q(self, state):
@@ -85,6 +88,22 @@ class QAgent:
     def remember(self, state, action, reward, next_state):
         self.replay_buffer.append((state, action, reward, next_state))
 
+    def get_mask(self, state):
+        # returns a "valid" mask for a given state
+        # note that this ONLY WORKS because input state is the SAME dimension as the q-vals (when divided into src q-vals and tgt q-vals)!!!!!!!
+        staging_threshold = int(np.floor(self.width * 0.8))
+        source_mask = state != 0 # or state is in staging ) #
+        source_mask[:,staging_threshold:] = True
+
+        add_mask = state == 0 # or state is in staging is false ) #
+        source_mask[:,staging_threshold:] = False
+
+        move_mask = state == 0 #can move anywhere that's not blocked -- staging is remove
+
+        return source_mask.flatten(), move_mask.flatten()
+
+        
+
     def retrain(self, batch_size):
         minibatch = random.sample(self.replay_buffer,batch_size) #if you make self.replay_memory an np array, you could do np.random.choice(self.replay_buffer,batch_size)
         for state, action, reward, next_state in minibatch:
@@ -93,17 +112,20 @@ class QAgent:
             # we assumed that src/target are independent, which may not be true (it isn't)
             # so we update both of the src/target vals for the action here using a single reward
             next_state_q_vals = self.model.predict(next_state.reshape((1,self.width,self.height,-1)))[0]
-
-            best_next_action = self.get_action(next_state_q_vals)
+            s_mask, t_mask = self.get_mask(next_state)
+            best_next_action = self.get_action(next_state_q_vals,s_mask,t_mask)
             a_src, a_tgt = best_next_action
 
             max_next_q_vals = np.array((next_state_q_vals[a_src],next_state_q_vals[a_tgt]))
             # get the actual reward plus discounted future q_val
-            target = reward + self.discount_rate * max_next_q_vals
+            target_q_src,target_q_tgt = reward + self.discount_rate * max_next_q_vals
             # assign it to the vector predicted q_vals from this state so we only update for the given action
             target_f = self.model.predict(state.reshape((1,self.width,self.height,-1)))
-            target_f[0][a_src] = target[0]
-            target_f[0][a_tgt] = target[1]
+            #update the target for illegal cells
+            s_mask, t_mask = self.get_mask(state)
+            target_f[0] *= np.concatenate([s_mask,t_mask])
+            target_f[0][a_src] = target_q_src
+            target_f[0][a_tgt] = target_q_tgt
             # fit the action src/target to the "real" values
             self.model.fit(state.reshape((1,self.width,self.height,-1)), target_f, epochs=1, verbose=0)
             
