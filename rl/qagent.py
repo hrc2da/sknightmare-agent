@@ -70,9 +70,6 @@ class QAgent:
     def get_action(self,q_vals,source_mask,target_mask):
         dim = self.width*self.height
         source_field = source_mask * q_vals[0:dim] # this is assuming q-vals stay positive (if the mask is 1 for valid and 0 for not)
-        import pdb
-        pdb.set_trace()
-        print(source_field)
         # an alternative would be to have the "0" mask values be some huge negative number that we just subtract
         target_field = target_mask * q_vals[dim:]
         source_loc = np.argmax(source_field)
