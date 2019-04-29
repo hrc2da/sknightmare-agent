@@ -63,7 +63,7 @@ class QAgent:
         return model
     
     def save_model(self,filename):
-        with open(filename+".yaml", 'w') as yaml_file:
+        with open(filename+".yaml", 'w+') as yaml_file:
             yaml_file.write(self.model.to_yaml())
         self.model.save_weights(filename+".h5")
 
