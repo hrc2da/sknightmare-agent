@@ -21,13 +21,13 @@ class ImageWriter():
         self.load_maps(os.path.join(base_fp,tables_fn),os.path.join(base_fp,equipment_fn))
         print("OBJECTS!!!",self.objects)
         self.dwg = svgwrite.Drawing( size = (width, height))
-        self.imgarr = np.zeros((width,height))
+        self.imgarr = np.zeros((height,width))
 
         #self.dwg.add(self.dwg.rect(insert = (0,0), size = (width, height), stroke = svgwrite.rgb(10, 10, 10), fill = svgwrite.rgb(255, 255, 255)))
 
     def reset_image(self):
         self.dwg = svgwrite.Drawing( size = (self.width, self.height))
-        self.imgarr = np.zeros((self.width,self.height))
+        self.imgarr = np.zeros((self.height,self.width))
 
     def load_maps(self, tables_fp, equipment_fp):
         with open(equipment_fp, 'r+') as infile:
@@ -85,13 +85,13 @@ class ImageWriter():
             self.dwg.add(self.dwg.image(href=os.path.join(self.bp,"svgs/waiter.svg"), insert = (self.width * waiter['x'], self.height * waiter['y']), size = (8,8)))
             x = int(self.width*waiter['x'])
             y = int(self.height*waiter['y'])
-            self.imgarr[x,y] = self.objects["staff"]
+            self.imgarr[y,x] = self.objects["staff"]
     def draw_tables(self, tables):
         for table in tables:
             table_name = table['name'].split(self.name_delimiter)[0]
             x = int(self.width * table['x'])
             y = int(self.height * table['y'])
-            self.imgarr[x,y] = self.objects[table_name]
+            self.imgarr[y,x] = self.objects[table_name]
             # if("Round" in table["name"]):
             #     rr,cc = circle(x,y,table["size"]/2)
             #     self.imgarr[rr,cc] = self.objects[table['name']]
@@ -110,7 +110,7 @@ class ImageWriter():
                 continue
             x = int(self.width * item['attributes']['x'])
             y = int(self.height * item['attributes']['y'])
-            self.imgarr[x,y] = self.objects[item_name]
+            self.imgarr[y,x] = self.objects[item_name]
             self.dwg.add(self.dwg.image(href=os.path.join(self.bp,self.item_svg_map[item_name]['path']), insert = (self.width * item['attributes']['x'], self.height * item['attributes']['y']), size = (8, 8)))
 
 

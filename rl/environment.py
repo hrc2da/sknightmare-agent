@@ -99,6 +99,7 @@ class Environment:
                                         }
                                 }],
                                 staff = [{"name": "staff","x":0.5,"y":0.5, "attributes":{"x":0.5,"y":0.5}}])
+        self.update_image()
         return self.get_state()
 
     def set_name(self,obj,obj_type):
@@ -184,6 +185,9 @@ class Environment:
         self.catalog["staff"] = self.RestaurantItem("staff",{"name":"staff","x":-1, "y":-1, "attributes":{"x":-1,"y":-1}})
 
     def set_item_location(self, item, x, y):
+        x /= self.height
+        y /= self.width
+
         item["x"] = x
         item["y"] = y
         item["attributes"]["x"] = x
@@ -232,28 +236,38 @@ class Environment:
     def act_vect2act_coords(self,source,target):
         #depending on if flatten goes by rows or columns, divide by width or height
         #the np flatten seems to go by rows, so I'll go by that.
-        source_x = source % self.width / self.width #converting to 0 to 1
-        source_y = source // self.width / self.height # converting to 0 to 1
+        print("SOURCE IS ",source)
+        # source_x = source % self.width #/ self.width #converting to 0 to 1
+        # source_y = source // self.width #/ self.height # converting to 0 to 1
+        # target = target-self.width*self.height
+        # target_x = target % self.width #/ self.width
+        # target_y = target // self.width #/ self.height
+
+        #turns out that np arrays flip x and y since they do rows and columns
+        source_y = source % self.width #/ self.width #converting to 0 to 1
+        source_x = source // self.width #/ self.height # converting to 0 to 1
         target = target-self.width*self.height
-        target_x = target % self.width / self.width
-        target_y = target // self.width / self.height
+        target_y = target % self.width #/ self.width
+        target_x = target // self.width #/ self.height
         return source_x, source_y, target_x, target_y
 
 
     def action2move(self, source_x, source_y, target_x, target_y):
         # source_x and target_x are not rescaled
-        if source_x > 0.8 and target_x > 0.8:
+        staging_threshold = int(np.floor(0.8*self.width))
+        if source_y >= staging_threshold and target_y >= staging_threshold:
             # return no move (penalize this)
             return self.Nop('move within staging',source_x,source_y)
-        elif source_x > 0.8:
+        elif source_y >= staging_threshold:
             # this is an add
             index,item = self.find_in_catalog(source_x, source_y)
             return self.Add(item.item["name"],target_x,target_y) # why don't we just pass the actual item????
 
-        elif target_x > 0.8:
+        elif target_y >= staging_threshold:
             # this is a remove
             index,item = self.find_in_layout(source_x, source_y)
             if index is None:
+                print("Can't find ",source_x,source_y)
                 return self.Nop('trying to remove nothing',source_x,source_y)
             return self.Remove(index)
 
@@ -261,12 +275,14 @@ class Environment:
             # it's a straight move
             index,item = self.find_in_layout(source_x, source_y)
             if index is None:
+                print("Can't find ",source_x,source_y)
                 return self.Nop('trying to move nothing',source_x,source_y)
             return self.Move(index,target_x,target_y)
     
     def find_in_catalog(self,x,y):
         # x /= self.width
-        # y /= self.height
+        # backwards because of numpy
+        y /= self.width
         print("indexing catalog for {}".format(y))
         index = math.floor(y * len(self.catalog))
         print("catalog index is {}".format(index))
@@ -275,10 +291,13 @@ class Environment:
         return index,item
     
     def find_in_layout(self,x,y,threshold=0.1):
-        # x /= self.width
-        # y /= self.height
+        #this is backwards again b/c numpy
+        x /= self.height
+        y /= self.width
+
         closest_index = 0
         closest_dist = 10 # can never be this big
+        closest_coords = []
         for i,obj in enumerate(self.restaurant_layout):
             o_x = obj.item["x"]
             o_y = obj.item["y"]
@@ -286,9 +305,11 @@ class Environment:
             if dist < closest_dist:
                 closest_index = i
                 closest_dist = dist
+                closest_coords = [o_x,o_y]
         if closest_dist < threshold:
             return closest_index, self.restaurant_layout[closest_index]
         else:
+            print("dist too far: ",closest_dist, (x,y), closest_coords)
             return None,None
 
     def get_state(self):
@@ -335,6 +356,7 @@ class Environment:
             print("REVERTING!!!!!!!")
             self.set_state(old_state)
             new_state = old_state
+        print("VALID SOURCES ",np.nonzero(new_state.image.flatten()))
         return new_state, reward
 
 

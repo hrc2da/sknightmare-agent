@@ -92,14 +92,13 @@ class QAgent:
         # returns a "valid" mask for a given state
         # note that this ONLY WORKS because input state is the SAME dimension as the q-vals (when divided into src q-vals and tgt q-vals)!!!!!!!
         staging_threshold = int(np.floor(self.width * 0.8))
-        source_mask = state != 0 # or state is in staging ) #
+        source_mask = state > 0 # or state is in staging ) #
         source_mask[:,staging_threshold:] = True
 
         add_mask = state == 0 # or state is in staging is false ) #
         add_mask[:,staging_threshold:] = False
 
         move_mask = state == 0 #can move anywhere that's not blocked -- staging is remove
-
         return source_mask.flatten(), move_mask.flatten()
 
         
