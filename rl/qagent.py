@@ -69,9 +69,14 @@ class QAgent:
 
     def get_action(self,q_vals,source_mask,target_mask):
         dim = self.width*self.height
-        source_field = source_mask * q_vals[0:dim] # this is assuming q-vals stay positive (if the mask is 1 for valid and 0 for not)
+        q_val_floor = np.min(q_vals) - 1 #use this number to mask the q_vals
+        inverted_source_mask = np.invert(source_mask) # the mask has True for valid spots. invert to get True's for invalid cells
+        source_field = q_vals[0:dim] # this is assuming q-vals stay positive (if the mask is 1 for valid and 0 for not)
+        source_field[inverted_source_mask] = q_val_floor
         # an alternative would be to have the "0" mask values be some huge negative number that we just subtract
-        target_field = target_mask * q_vals[dim:]
+        inverted_target_mask = np.invert(target_mask)
+        target_field = q_vals[dim:]
+        target_field[inverted_target_mask] = q_val_floor
         source_loc = np.argmax(source_field)
         target_loc = np.argmax(target_field) + dim
         return source_loc, target_loc
