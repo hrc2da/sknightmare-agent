@@ -35,7 +35,7 @@ if __name__ == "__main__":
     if args.epsdecay == 'empty':
         eps_decay = 0.999
     else:
-        eps_decay = float(args.epsdecay)
+        eps_decay = float(args.eps_decay)
     outcomes = SKOutcomes()
     preferences = [0.5,0.7,0.05,0.5,0.3,0.3,0.4]
     pd = PreferenceDummy(outcomes,preferences)
