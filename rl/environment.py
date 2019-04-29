@@ -27,7 +27,7 @@ class Environment:
     RestaurantItem = recordclass('RestaurantItem', ['type','item'])
     State = recordclass('State', ['layout','image', 'png'])
     mistake_threshold = 0
-    SIZE_SCALAR = 15 # this is just to adjust for the fact that our items are relatively too big for our layout size
+    SIZE_SCALAR = 20 # this is just to adjust for the fact that our items are relatively too big for our layout size
     name_delimiter = "___"
 
     def __init__(self, width, height, tables, equipment, staff, reward_model, table_fp="util/tables.json", eq_fp="util/items.json"):
@@ -321,20 +321,20 @@ class Environment:
 
     def get_reward(self, old_state, new_state, action):
         if type(action) == self.Nop:
-            return -1e6
+            return 0
         # new_layout = new_state.layout
         # return len(new_layout)-self.count_collisions(new_layout) # not sure if I should account for the old state in reward or not
         num_mistakes = self.count_collisions(new_state.layout)
         if num_mistakes > self.mistake_threshold:
             print("Found {} mistakes in the restaurant: {}".format(num_mistakes,new_state.layout))
-            return -1e8
+            return 0
         else:
             new_layout = new_state.layout
             try:
                 r = Restaurant("Sophie's Kitchen", self.get_equipment(new_layout), self.get_tables(new_layout), self.get_staff(new_layout), verbose=False)
             except ValueError as e:
                 print("Missing minumum of tables or equipment: ",e)
-                return -1e8
+                return 0
             r.simulate(days=14)
             print("SIMULATING RESTAURANT!!!")
             outcomes = r.ledger.generate_final_report()
@@ -351,7 +351,7 @@ class Environment:
         self.update_image()
         new_state = self.get_state()
         reward = self.get_reward(old_state, new_state, move)
-        if reward <= -1e6:
+        if reward == 0: #this is odd, but let's assume 0 is a penalty
             # for any penalty, revert the state
             print("REVERTING!!!!!!!")
             self.set_state(old_state)
@@ -369,6 +369,7 @@ class Environment:
             bi_x = blocking_item["attributes"]["x"]*self.width
             bi_y = blocking_item["attributes"]["y"]*self.height
             bi_size = blocking_item["size"] / self.SIZE_SCALAR # already in pixels
+            bi_size = 0 #turning OFF collision check unless on top of each other for now
         except KeyError as e:
             # this is dumb, but I do want it to break if this happens
             raise(KeyError("{}\nTried to check collision with an item that doesn't have (x,y)".format(e)))
@@ -387,18 +388,21 @@ class Environment:
         # if they do not overlap, one of the right sides of the bounding boxes will be to the left side of the other bounding box
         # AND one of the top sides of the bounding boxes will be under the bottom side of the other bounding box
         collision = False
+        collision_x = False
+        collision_y = False
         if not ( bi_x_max < x_min or x_max < bi_x_min ):
             # overlaps in x direction
             #print("OVERX")
-            collision = True
+            collision_x = True
         if not ( bi_y_max < y_min or y_max < bi_y_min ):
             # overlaps in y direction
             #print("OVERY")
-            collision = True
-        if collision == True:
+            collision_y = True
+        if collision_x == True and collision_y == True:
             print("*******************************************")
             print("COLLISION: ({},{}) and ({},{}), sizes = ({},{})".format(x,y,bi_x,bi_y,size,bi_size))
             print("*******************************************")
+            collision = True
         return collision
 
     def count_collisions(self, restaurant_layout):

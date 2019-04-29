@@ -18,6 +18,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--saved", nargs='?', default='empty')
     parser.add_argument("--episodes", nargs='?', default='empty')
+    parser.add_argument("--epsdecay", nargs='?', default='empty')
     args = parser.parse_args()
     if args.saved == 'empty':
         saved_model = None
@@ -31,16 +32,20 @@ if __name__ == "__main__":
         num_episodes = 30
     else:
         num_episodes = int(args.episodes)
+    if args.epsdecay == 'empty':
+        eps_decay = 0.999
+    else:
+        eps_decay = float(args.epsdecay)
     outcomes = SKOutcomes()
     preferences = [0.5,0.7,0.05,0.5,0.3,0.3,0.4]
     pd = PreferenceDummy(outcomes,preferences)
     bo = SKBayesOpt(pd)
     env = Environment(width = WIDTH, height = HEIGHT, tables = [], equipment = [], staff = [], reward_model = bo)
-    qa = QAgent(input_shape = (WIDTH,HEIGHT),saved_model=saved_model, saved_weights=saved_weights)
+    qa = QAgent(input_shape = (WIDTH,HEIGHT),saved_model=saved_model, saved_weights=saved_weights, eps_decay = epsdecay)
     #qa = QAgent(input_shape = (65,34))
     episodes = num_episodes
     base_iterations_per_ep = 2 
-    max_iterations_per_ep = 20
+    max_iterations_per_ep = 10
     restaurants = []
     state = env.reset(init_state = None) # implement this!!!
     stats = []
@@ -49,7 +54,7 @@ if __name__ == "__main__":
         print("Episode {}".format(e))
         state = env.reset(init_state = None)
         #restaurants.append((state,None,0))
-        num_iter = min(base_iterations_per_ep * (e+1), max_iterations_per_ep)
+        num_iter = max_iterations_per_ep #min(base_iterations_per_ep * (e+1), max_iterations_per_ep)
         for i in range(num_iter): # scale up the number of episodes as we learn more hopefully
             q_vals = qa.predict_q(state.image)
             source_mask,target_mask = qa.get_mask(state.image)
