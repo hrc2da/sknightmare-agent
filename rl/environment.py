@@ -38,6 +38,7 @@ class Environment:
         self.image_writer = ImageWriter(width,height,"util","tables.json", "items.json")
         self.initialize_state(tables,equipment,staff)
         self.populate_catalog("util/tables.json", "util/items.json")
+        self.sim_outcomes = None
     
     def reset(self, init_state = None):
         if not init_state:
@@ -337,9 +338,9 @@ class Environment:
                 return 0
             r.simulate(days=14)
             print("SIMULATING RESTAURANT!!!")
-            outcomes = r.ledger.generate_final_report()
-            print(outcomes)
-            return self.reward_model.get_reward(outcomes)
+            self.sim_outcomes = r.ledger.generate_final_report()
+            print(self.sim_outcomes)
+            return self.reward_model.get_reward(self.sim_outcomes)
 
 
 

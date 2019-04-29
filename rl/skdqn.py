@@ -19,6 +19,7 @@ if __name__ == "__main__":
     parser.add_argument("--saved", nargs='?', default='empty')
     parser.add_argument("--episodes", nargs='?', default='empty')
     parser.add_argument("--epsdecay", nargs='?', default='empty')
+    parser.add_argument("--preference", nargs='?', default='empty')
     args = parser.parse_args()
     if args.saved == 'empty':
         saved_model = None
@@ -28,16 +29,37 @@ if __name__ == "__main__":
         print("Using save name {}".format(base))
         saved_model = base + ".yaml"
         saved_weights = base + ".h5"
+
     if args.episodes == 'empty':
         num_episodes = 30
     else:
         num_episodes = int(args.episodes)
+
     if args.epsdecay == 'empty':
         eps_decay = 0.999
     else:
         eps_decay = float(args.epsdecay)
+
+    if args.preference == 'empty':
+        preferences = [0.5,0.7,0.05,0.5,0.3,0.3,0.4]
+    elif args.preference == 'revenue':
+        preferences = [1,0,0,0,0,0,0]
+    elif args.preference == 'profit':
+        preferences = [0,1,0,0,0,0,0]
+    elif args.preference == 'avg_noise':
+        preferences = [0,0,1,0,0,0,0]
+    elif args.preference == 'daily_customers':
+        preferences = [0,0,0,1,0,0,0]
+    elif args.preference == 'service_rating':
+        preferences = [0,0,0,0,1,0,0]
+    elif args.preference == 'avg_check':
+        preferences = [0,0,0,0,0,1,0]
+    elif args.preference == 'satisfaction':
+        preferences = [0,0,0,0,0,0,1]
+    else:
+        preferences = [0.5,0.7,0.05,0.5,0.3,0.3,0.4]
+
     outcomes = SKOutcomes()
-    preferences = [0.5,0.7,0.05,0.5,0.3,0.3,0.4]
     pd = PreferenceDummy(outcomes,preferences)
     bo = SKBayesOpt(pd)
     env = Environment(width = WIDTH, height = HEIGHT, tables = [], equipment = [], staff = [], reward_model = bo)
@@ -49,6 +71,7 @@ if __name__ == "__main__":
     restaurants = []
     state = env.reset(init_state = None) # implement this!!!
     stats = []
+    simulations = []
     for e in range(episodes):
         episode_stats = {"mistakes":0,"nops":0,"actions":0,"rewards":[]}
         print("Episode {}".format(e))
@@ -60,6 +83,8 @@ if __name__ == "__main__":
             source_mask,target_mask = qa.get_mask(state.image)
             action = qa.get_action(q_vals[0],source_mask,target_mask)
             next_state, reward = env.step(action)
+            sim_outcomes = env.sim_outcomes
+            simulations.append((next_state.image,sim_outcomes,reward))
             print("\nREWARD:{}\n".format(reward))
             if reward > 5000:
                 restaurants.append((next_state,action,reward))
@@ -87,6 +112,10 @@ if __name__ == "__main__":
         print("THIS MANY ALLSTARS: {}".format(len(restaurants)))
         #this needs to pickle
         pickle.dump(restaurants,picklefile)
+    with open("simulations_{}.pkl".format(time.time()),"wb+") as picklefile:
+        print("This many simulations: {}".format(len(simulations)))
+        #this needs to pickle
+        pickle.dump(simulations,picklefile)
     print("finished.")
         
 

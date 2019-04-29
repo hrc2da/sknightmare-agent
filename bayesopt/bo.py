@@ -7,12 +7,12 @@ import time
 class SKOutcomes:
     def __init__(self):
         self.outcomes = {
-            'revenue': {'bounds':[-1e9,1e9], 'val': 0.0},
-            'profit': {'bounds':[-1e6,1e6], 'val': 0.0},
-            'avg_noise': {'bounds': [0,1e6], 'val': 0},
-            'daily_customers': {'bounds': [0,1e5], 'val': 0},
+            'revenue': {'bounds':[-1e5,1e5], 'val': 0.0},
+            'profit': {'bounds':[-1e5,1e5], 'val': 0.0},
+            'avg_noise': {'bounds': [0,1e5], 'val': 0},
+            'daily_customers': {'bounds': [0,1e4], 'val': 0},
             'service_rating': {'bounds': [0.0,1.0], 'val':0.5},
-            'avg_check': {'bounds': [0.0,1e3], 'val':0.5},
+            'avg_check': {'bounds': [0.0,150], 'val':0.5},
             'satisfaction': {'bounds': [0.0,1.0], 'val':0.5}
         }
         self.preferences = np.random.rand(len(self.outcomes))
