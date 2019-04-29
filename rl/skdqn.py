@@ -35,13 +35,13 @@ if __name__ == "__main__":
     if args.epsdecay == 'empty':
         eps_decay = 0.999
     else:
-        eps_decay = float(args.eps_decay)
+        eps_decay = float(args.epsdecay)
     outcomes = SKOutcomes()
     preferences = [0.5,0.7,0.05,0.5,0.3,0.3,0.4]
     pd = PreferenceDummy(outcomes,preferences)
     bo = SKBayesOpt(pd)
     env = Environment(width = WIDTH, height = HEIGHT, tables = [], equipment = [], staff = [], reward_model = bo)
-    qa = QAgent(input_shape = (WIDTH,HEIGHT),saved_model=saved_model, saved_weights=saved_weights, eps_decay = epsdecay)
+    qa = QAgent(input_shape = (WIDTH,HEIGHT),saved_model=saved_model, saved_weights=saved_weights, eps_decay = eps_decay)
     #qa = QAgent(input_shape = (65,34))
     episodes = num_episodes
     base_iterations_per_ep = 2 
