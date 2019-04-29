@@ -20,20 +20,30 @@ class SKOutcomes:
         return np.array([self.outcomes[o]['bounds'] for o in self.outcomes])
     def get_preference_keys(self):
         return self.outcomes.keys()
+    def normalize(self,value,bounds):
+        #trim to our boundaries
+        if value > bounds[-1]:
+            value = bounds[-1]
+        elif value < bounds[0]:
+            value = bounds[0]
+        denominator = bounds[-1]-bounds[0]
+        numerator = value - bounds[0]
+        return numerator/denominator
     def get_outcomes(self,outcomes=None):
         if outcomes != None:
             features = self.get_preference_keys()
             outcome_vec = []
             for f in features:
+                bounds = self.outcomes[f]['bounds']
                 try:
                     val = outcomes[f]
                 except KeyError as e:
                     print("The output and preference vectors don't match!")
                     raise(e)
                 if type(val) is list:
-                    outcome_vec.append(val[0]) # assume the first value is the one we want (e.g. mean, std)
+                    outcome_vec.append(self.normalize(val[0],bounds)) # assume the first value is the one we want (e.g. mean, std)
                 else:
-                    outcome_vec.append(val)
+                    outcome_vec.append(self.normalize(val,bounds))
             return np.array(outcome_vec)
         return np.array([self.outcomes[o]['val'] for o in self.outcomes])
     def get_preferences(self):

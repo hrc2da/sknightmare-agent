@@ -60,6 +60,7 @@ if __name__ == "__main__":
             source_mask,target_mask = qa.get_mask(state.image)
             action = qa.get_action(q_vals[0],source_mask,target_mask)
             next_state, reward = env.step(action)
+            print("\nREWARD:{}\n".format(reward))
             if reward > 5000:
                 restaurants.append((next_state,action,reward))
                 next_state.png.save("/content/"+str(reward)+".png")
