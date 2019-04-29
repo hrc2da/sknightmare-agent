@@ -20,6 +20,7 @@ if __name__ == "__main__":
     parser.add_argument("--episodes", nargs='?', default='empty')
     parser.add_argument("--epsdecay", nargs='?', default='empty')
     parser.add_argument("--preference", nargs='?', default='empty')
+    parser.add_argument("--savepath", nargs='?', default='empty')
     args = parser.parse_args()
     if args.saved == 'empty':
         saved_model = None
@@ -29,6 +30,11 @@ if __name__ == "__main__":
         print("Using save name {}".format(base))
         saved_model = base + ".yaml"
         saved_weights = base + ".h5"
+
+    if args.savepath == 'empty':
+        savepath = './'
+    else:
+        savepath = args.savepath
 
     if args.episodes == 'empty':
         num_episodes = 30
@@ -100,22 +106,22 @@ if __name__ == "__main__":
         next_state.png.show()
         stats.append(episode_stats)
         qa.retrain(num_iter)
-    qa.save_model("skdqn")
-    with open("skdnlog_{}.csv".format(time.time()),"w+") as logfile:
-        logwriter = csv.writer(logfile,delimiter=',')
-        logwriter.writerow(["mean_reward","max_reward","mistakes","nops","actions"])
-        for e in stats:
-            max_reward = max(e["rewards"])
-            mean_reward = np.mean(e["rewards"])
-            logwriter.writerow([mean_reward,max_reward,e["mistakes"],e["nops"],e["actions"]])
-    with open("allstars_{}.pkl".format(time.time()),"wb+") as picklefile:
-        print("THIS MANY ALLSTARS: {}".format(len(restaurants)))
-        #this needs to pickle
-        pickle.dump(restaurants,picklefile)
-    with open("simulations_{}.pkl".format(time.time()),"wb+") as picklefile:
-        print("This many simulations: {}".format(len(simulations)))
-        #this needs to pickle
-        pickle.dump(simulations,picklefile)
+        qa.save_model(savepath+"skdqn")
+        with open(savepath+"skdnlog_{}.csv".format(time.time()),"w+") as logfile:
+            logwriter = csv.writer(logfile,delimiter=',')
+            logwriter.writerow(["mean_reward","max_reward","mistakes","nops","actions"])
+            for e in stats:
+                max_reward = max(e["rewards"])
+                mean_reward = np.mean(e["rewards"])
+                logwriter.writerow([mean_reward,max_reward,e["mistakes"],e["nops"],e["actions"]])
+        with open(savepath+"allstars_{}.pkl".format(time.time()),"wb+") as picklefile:
+            print("THIS MANY ALLSTARS: {}".format(len(restaurants)))
+            #this needs to pickle
+            pickle.dump(restaurants,picklefile)
+        with open(savepath+"simulations_{}.pkl".format(time.time()),"wb+") as picklefile:
+            print("This many simulations: {}".format(len(simulations)))
+            #this needs to pickle
+            pickle.dump(simulations,picklefile)
     print("finished.")
         
 
