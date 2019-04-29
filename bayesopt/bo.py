@@ -7,8 +7,8 @@ import time
 class SKOutcomes:
     def __init__(self):
         self.outcomes = {
-            'revenue': {'bounds':[-1e5,1e5], 'val': 0.0},
-            'profit': {'bounds':[-1e5,1e5], 'val': 0.0},
+            'revenue': {'bounds':[-40000,40000], 'val': 0.0},
+            'profit': {'bounds':[-30000,30000], 'val': 0.0},
             'avg_noise': {'bounds': [0,1e5], 'val': 0},
             'daily_customers': {'bounds': [0,1e4], 'val': 0},
             'service_rating': {'bounds': [0.0,1.0], 'val':0.5},
