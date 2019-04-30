@@ -73,12 +73,14 @@ if __name__ == "__main__":
     #qa = QAgent(input_shape = (65,34))
     episodes = num_episodes
     base_iterations_per_ep = 2 
-    max_iterations_per_ep = 10
-    restaurants = []
+    max_iterations_per_ep = 20
+    
     state = env.reset(init_state = None) # implement this!!!
-    stats = []
-    simulations = []
+    
     for e in range(episodes):
+        stats = []
+        simulations = []
+        restaurants = []
         episode_stats = {"mistakes":0,"nops":0,"actions":0,"rewards":[]}
         print("Episode {}".format(e))
         state = env.reset(init_state = None)
