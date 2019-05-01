@@ -15,11 +15,12 @@ class SKOutcomes:
             'avg_check': {'bounds': [0.0,150], 'val':0.5},
             'satisfaction': {'bounds': [0.0,1.0], 'val':0.5}
         }
+        self.outcome_keys = ['revenue','profit','avg_noise','daily_customers','service_rating','avg_check','satisfaction']
         self.preferences = np.random.rand(len(self.outcomes))
     def get_bounds(self):
         return np.array([self.outcomes[o]['bounds'] for o in self.outcomes])
     def get_preference_keys(self):
-        return self.outcomes.keys()
+        return self.outcome_keys
     def normalize(self,value,bounds):
         #trim to our boundaries
         if value > bounds[-1]:
