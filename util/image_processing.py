@@ -33,12 +33,18 @@ class ImageWriter():
         with open(equipment_fp, 'r+') as infile:
             data = json.load(infile)
             self.item_svg_map = {}
-            for key, item in data.items():
+            keys = list(data)
+            keys.sort()
+            for key in keys:
+                item = data[key]
                 self.item_svg_map[item['name']] = item
                 self.objects[item["name"]] = len(self.objects)
         with open(tables_fp, 'r+') as infile:
             self.tables_svg_map = json.load(infile)
-            for key, item in self.tables_svg_map.items():
+            keys = list(self.tables_svg_map)
+            keys.sort()
+            for key in keys:
+                item = self.tables_svg_map[key]
                 print(item["name"], len(self.objects))
                 self.objects[item["name"]] = len(self.objects)
                 #note that the bars will show up as either a table or an appliance; one will overwrite the other; it doesn't really matter I think for training

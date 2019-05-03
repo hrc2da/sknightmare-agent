@@ -280,6 +280,7 @@ class Environment:
                 return self.Nop('trying to move nothing',source_x,source_y)
             return self.Move(index,target_x,target_y)
     
+
     def find_in_catalog(self,x,y):
         # x /= self.width
         # backwards because of numpy
@@ -287,7 +288,10 @@ class Environment:
         print("indexing catalog for {}".format(y))
         index = math.floor(y * len(self.catalog))
         print("catalog index is {}".format(index))
-        key = list(self.catalog)[index]
+        keys = list(self.catalog)
+        keys.sort()
+        print("catalog:",keys)
+        key = keys[index]
         item = self.catalog[key]
         return index,item
     
