@@ -36,12 +36,47 @@ class Environment:
         self.action_dims = 4
         self.reward_model = reward_model
         self.image_writer = ImageWriter(width,height,"util","tables.json", "items.json")
-        self.initialize_state(tables,equipment,staff)
+        
         self.populate_catalog("util/tables.json", "util/items.json")
+        self.initialize_state(tables,equipment,staff)
         self.sim_outcomes = None
     
+    def generate_random_state(self):
+        #todo: check for collisions
+        num_tables = np.random.randint(5)
+        num_eq = np.random.randint(5)
+        num_staff = np.random.randint(5)
+        tables = []
+        eq = []
+        staff = []
+        for t in num_tables:
+            name = self.table_names[np.random.randint(len(self.table_names))]
+            new_table = copy(self.catalog[name].item)
+            x,y = np.random.random(2)
+            self.set_item_location(new_table,x,y)
+            tables.append(new_table)
+        for e in num_eq:
+            name = self.eq_names[np.random.randint(len(self.eq_names))]
+            new_eq = copy(self.catalog[name].item)
+            x,y = np.random.random(2)
+            self.set_item_location(new_eq,x,y)
+            eq.append(new_eq)
+        for s in num_staff:
+            new_staff = copy(self.catalog["staff"].item)
+            x,y = np.random.random(2)
+            self.set_item_location(new_staff,x,y)
+            staff.append(new_staff)
+        return tables,eq,staff
     def reset(self, init_state = None):
-        if not init_state:
+        if init_state == "random":
+
+            tables,eq,staff = self.generate_random_state()
+            self.initialize_state(tables,eq,staff)
+            self.update_image()
+            return self.get_state()
+            
+        elif not init_state:
+            
             self.initialize_state(tables = [{
                                     "type": "image",
                                     "size": 30,
