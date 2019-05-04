@@ -22,6 +22,9 @@ if __name__ == "__main__":
     parser.add_argument("--preference", nargs='?', default='empty')
     parser.add_argument("--savepath", nargs='?', default='empty')
     parser.add_argument("--init", nargs='?', default='empty')
+    parser.add_argument("--fixed_target", nargs='?', default='empty')
+    parser.add_argument("--eps", nargs='?', default='empty')
+    parser.add_argument("--discount", nargs='?', default='empty')
     args = parser.parse_args()
     if args.saved == 'empty':
         saved_model = None
@@ -71,11 +74,29 @@ if __name__ == "__main__":
     else:
         init_state = args.init
 
+    if args.fixed_target in ('true', 'True', 't'):
+        print("Using Fixed Target Network. This fixes the target network over this entire batch of episodes, run again using the generated saved h5 weights file to 'update' Q.")
+        fixed_target = True
+    else:
+        fixed_target = False
+    
+    if args.discount == 'empty':
+        discount_rate = 0.9
+    else:
+        discount_rate = args.discount
+
+    if args.eps == 'empty':
+        eps = 1.0
+    else:
+        eps = args.eps
+
     outcomes = SKOutcomes()
     pd = PreferenceDummy(outcomes,preferences)
     bo = SKBayesOpt(pd)
     env = Environment(width = WIDTH, height = HEIGHT, tables = [], equipment = [], staff = [], reward_model = bo)
-    qa = QAgent(input_shape = (WIDTH,HEIGHT),saved_model=saved_model, saved_weights=saved_weights, eps_decay = eps_decay)
+    
+    qa = QAgent(input_shape = (WIDTH,HEIGHT),saved_model=saved_model, saved_weights=saved_weights, eps = eps, eps_decay = eps_decay, discount = discount_rate, fixed_target=fixed_target)
+ 
     #qa = QAgent(input_shape = (65,34))
     episodes = num_episodes
     base_iterations_per_ep = 2 

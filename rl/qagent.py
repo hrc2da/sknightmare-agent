@@ -25,16 +25,21 @@ class QAgent:
         'target_y'
         #etc
     ]
-    def __init__(self,input_shape,saved_model=None,saved_weights=None,eps_decay=0.999):
-        self.eps = 1.0
+    def __init__(self,input_shape,saved_model=None,saved_weights=None,eps=1.0,eps_decay=0.999,discount=0.9,fixed_target=False):
+        self.eps = eps
         self.eps_decay = eps_decay
         self.eps_min = 0.01
-        self.discount_rate = 0.9
+        self.discount_rate = discount
         self.width,self.height = input_shape
         self.actions = np.zeros([2,self.width,self.height])
         self.replay_buffer = []
         self.lossfn = 'mse' # for now
         self.model = self.setup_q_network(input_shape,saved_model,saved_weights)
+        if fixed_target:
+            self.target_model = self.setup_q_network(input_shape,saved_model,saved_weights)
+        else:
+            self.target_model = None
+        self.fixed_target = fixed_target
         # self.state = RestaurantGenerator(input_shape[0], input_shape[1])
         # self.state.load_dicts(tables, equipment, staff)
  
@@ -115,15 +120,25 @@ class QAgent:
             # note that because we have src/target and have collapsed from w*h*w*h to 2*w*h
             # we assumed that src/target are independent, which may not be true (it isn't)
             # so we update both of the src/target vals for the action here using a single reward
-            next_state_q_vals = self.model.predict(next_state.reshape((1,self.width,self.height,-1)))[0]
+            if self.fixed_target == True:
+                next_state_q_vals = self.target_model.predict(next_state.reshape((1,self.width,self.height,-1)))[0]
+            else:
+                next_state_q_vals = self.model.predict(next_state.reshape((1,self.width,self.height,-1)))[0]
             s_mask, t_mask = self.get_mask(next_state)
             best_next_action = self.get_action(next_state_q_vals,s_mask,t_mask)
             a_src, a_tgt = best_next_action
-
             max_next_q_vals = np.array((next_state_q_vals[a_src],next_state_q_vals[a_tgt]))
             # get the actual reward plus discounted future q_val
+
+            ########### TD Update Target ######################
             target_q_src,target_q_tgt = reward + self.discount_rate * max_next_q_vals
+            ############################################
+
             # assign it to the vector predicted q_vals from this state so we only update for the given action
+            # here we are just getting the q-vals for the other indices which we are not updating (this is the prediction for all 
+            # q's we haven't learned anything about on this step, i.e. we have no target based on this step
+            # for all q-vals except for the src/action pair, target-prediction = 0. In the future, consider zeroing out invalid acts here
+            # since we kind of DO have a target value for them)
             target_f = self.model.predict(state.reshape((1,self.width,self.height,-1)))
             #update the target for illegal cells
             s_mask, t_mask = self.get_mask(state)
