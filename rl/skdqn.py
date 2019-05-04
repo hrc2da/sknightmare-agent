@@ -21,6 +21,7 @@ if __name__ == "__main__":
     parser.add_argument("--epsdecay", nargs='?', default='empty')
     parser.add_argument("--preference", nargs='?', default='empty')
     parser.add_argument("--savepath", nargs='?', default='empty')
+    parser.add_argument("--init", nargs='?', default='empty')
     args = parser.parse_args()
     if args.saved == 'empty':
         saved_model = None
@@ -65,6 +66,11 @@ if __name__ == "__main__":
     else:
         preferences = [0.5,0.7,0.05,0.5,0.3,0.3,0.4]
 
+    if args.init == 'empty':
+        init_state = None
+    else:
+        init_state = args.init
+
     outcomes = SKOutcomes()
     pd = PreferenceDummy(outcomes,preferences)
     bo = SKBayesOpt(pd)
@@ -74,16 +80,16 @@ if __name__ == "__main__":
     episodes = num_episodes
     base_iterations_per_ep = 2 
     max_iterations_per_ep = 20
-    
-    state = env.reset(init_state = None) # implement this!!!
-    
+    print("RESETTING")
+    state = env.reset(init_state = init_state) # implement this!!!
+    print("STARTING")
     for e in range(episodes):
         stats = []
         simulations = []
         restaurants = []
         episode_stats = {"mistakes":0,"nops":0,"actions":0,"rewards":[]}
         print("Episode {}".format(e))
-        state = env.reset(init_state = None)
+        state = env.reset(init_state = init_state)
         #restaurants.append((state,None,0))
         num_iter = max_iterations_per_ep #min(base_iterations_per_ep * (e+1), max_iterations_per_ep)
         for i in range(num_iter): # scale up the number of episodes as we learn more hopefully

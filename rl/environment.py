@@ -36,12 +36,70 @@ class Environment:
         self.action_dims = 4
         self.reward_model = reward_model
         self.image_writer = ImageWriter(width,height,"util","tables.json", "items.json")
-        self.initialize_state(tables,equipment,staff)
+        
         self.populate_catalog("util/tables.json", "util/items.json")
+        self.initialize_state(tables,equipment,staff)
         self.sim_outcomes = None
     
+    def generate_random_state(self):
+        # design choice: there can be a random start with 0 tables or 0 eq. it may be important for the agent
+        # to learn that if this is the case, it should add the missing table or eq. I'll try this for now but if too
+        # hard, we can fix to have min 1 of each table, eq, staff
+        gridw = 5
+        gridh = 5
+        num_tables = np.random.randint(5)
+        num_eq = np.random.randint(5)
+        num_staff = np.random.randint(5)
+        tables = []
+        eq = []
+        staff = []
+        assert num_tables + num_eq + num_staff <= gridw * gridh
+        #generate an 10x10 grid for locations
+        #for each element of the grid, generate a random number
+        #then take the max N grid spots as locations and assign them (pop from end of ascending list)
+        location_lottery = np.random.random((gridw,gridh))
+        locations = list(map(lambda x: np.unravel_index(x,location_lottery.shape), np.argsort(location_lottery.flatten())))
+        print(locations)
+        for t in range(num_tables):
+            name = self.table_names[np.random.randint(len(self.table_names))]
+            new_table = deepcopy(self.catalog[name])
+            locx, locy = locations.pop()
+            print(locx,locy)
+            x = (1.0/gridw)*(np.random.random() + locx)
+            y = (1.0/gridh)*(np.random.random() + locy)
+            new_table.item = self.set_item_location(new_table.item,x,y,downscale=False)
+            new_table.item = self.set_name(new_table.item,new_table.type)
+            tables.append(new_table.item)
+        for e in range(num_eq):
+            name = self.eq_names[np.random.randint(len(self.eq_names))]
+            new_eq = deepcopy(self.catalog[name])
+            locx, locy = locations.pop()
+            x = (1.0/gridw)*(np.random.random() + locx)
+            y = (1.0/gridh)*(np.random.random() + locy)
+            new_eq.item = self.set_item_location(new_eq.item,x,y,downscale=False)
+            new_eq.item = self.set_name(new_eq.item,new_eq.type)
+            eq.append(new_eq.item)
+        for s in range(num_staff):
+            new_staff = deepcopy(self.catalog["staff"])
+            locx, locy = locations.pop()
+            x = (1.0/gridw)*(np.random.random() + locx)
+            y = (1.0/gridh)*(np.random.random() + locy)
+            new_staff.item = self.set_item_location(new_staff.item,x,y,downscale=False)
+            new_staff.item = self.set_name(new_staff.item,new_staff.type)
+            staff.append(new_staff.item)
+        return tables,eq,staff
     def reset(self, init_state = None):
-        if not init_state:
+        if init_state == "random":
+
+            tables,eq,staff = self.generate_random_state()
+            self.initialize_state(tables,eq,staff)
+            self.update_image()
+            print([(r.item['name'],r.item['x'],r.item['y']) for r in self.restaurant_layout])
+            self.count_collisions(self.restaurant_layout)
+            return self.get_state()
+
+        elif not init_state:
+            
             self.initialize_state(tables = [{
                                     "type": "image",
                                     "size": 30,
@@ -101,6 +159,7 @@ class Environment:
                                 }],
                                 staff = [{"name": "staff","x":0.5,"y":0.5, "attributes":{"x":0.5,"y":0.5}}])
         self.update_image()
+        
         return self.get_state()
 
     def set_name(self,obj,obj_type):
@@ -185,9 +244,10 @@ class Environment:
                 self.catalog[eq["name"]] = self.RestaurantItem("equipment",eq)
         self.catalog["staff"] = self.RestaurantItem("staff",{"name":"staff","x":-1, "y":-1, "attributes":{"x":-1,"y":-1}})
 
-    def set_item_location(self, item, x, y):
-        x /= self.height
-        y /= self.width
+    def set_item_location(self, item, x, y, downscale=True):
+        if downscale == True:
+            x /= self.height
+            y /= self.width
 
         item["x"] = x
         item["y"] = y
@@ -395,6 +455,7 @@ class Environment:
         collision = False
         collision_x = False
         collision_y = False
+
         if not ( bi_x_max < x_min or x_max < bi_x_min ):
             # overlaps in x direction
             #print("OVERX")
