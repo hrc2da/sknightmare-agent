@@ -26,33 +26,6 @@
       "radius": 0
     }
   },
-  "2": {
-    "name": "Microwave",
-    "type": "image",
-    "size": 25,
-    "path": "svgs/microwave.svg",
-    "attributes": {
-      "category": "cooking",
-      "capabilities": {
-        "microwave": {
-          "quality_mean": 0.1,
-          "quality_std": 0.05,
-          "cook_time_mult": 0.1,
-          "cook_time_std": 0.05
-        }
-      },
-      "path": "svgs/microwave.svg",
-      "difficulty_rating": 0.2,
-      "cost": 100,
-      "daily_upkeep": 5,
-      "reliability": 0.9,
-      "noisiness": 0.1,
-      "atmosphere": 0.1,
-      "x": -1,
-      "y": -1,
-      "radius": 0
-    }
-  },
 
   "3": {
     "name": "Brick Pizza Oven",
@@ -81,89 +54,6 @@
       "daily_upkeep": 10,
       "reliability": 0.9,
       "noisiness": 0.2,
-      "atmosphere": 0.6,
-      "x": -1,
-      "y": -1,
-      "radius": 0
-    }
-  },
-
-  "4": {
-    "name": "Sushi Robot",
-    "type": "image",
-    "size": 25,
-    "path": "svgs/robot.svg",
-    "attributes": {
-      "category": "cooking",
-      "capabilities": {
-        "sushi": {
-          "quality_mean": 0.5,
-          "quality_std": 0.1,
-          "cook_time_mult": 1.2,
-          "cook_time_std": 0.1
-        }
-      },
-      "path": "svgs/robot.svg",
-      "difficulty_rating": 0.8,
-      "cost": 4000,
-      "daily_upkeep": 80,
-      "reliability": 0.9,
-      "noisiness": 0.4,
-      "atmosphere": 0.1,
-      "x": -1,
-      "y": -1,
-      "radius": 0
-    }
-  },
-
-  "5": {
-    "name": "Sushi Master",
-    "type": "image",
-    "size": 25,
-    "path": "svgs/sushimaster.svg",
-    "attributes": {
-      "category": "cooking",
-      "capabilities": {
-        "sushi": {
-          "quality_mean": 0.9,
-          "quality_std": 0.1,
-          "cook_time_mult": 0.9,
-          "cook_time_std": 0.1
-        }
-      },
-      "path": "svgs/sushimaster.svg",
-      "difficulty_rating": 1,
-      "cost": 100,
-      "daily_upkeep": 200,
-      "reliability": 0.9,
-      "noisiness": 0.1,
-      "atmosphere": 0.6,
-      "x": -1,
-      "y": -1,
-      "radius": 0
-    }
-  },
-
-  "6": {
-    "name": "Pianist",
-    "type": "image",
-    "size": 25,
-    "path": "svgs/piano.svg",
-    "attributes": {
-      "category": "entertainment",
-      "capabilities": {
-        "noise_dampening": 1
-      },
-      "path": "svgs/piano.svg",
-      "cook_time_mean": 1,
-      "cook_time_std": 0.1,
-      "quality_mean": 0.9,
-      "quality_std": 0.1,
-      "difficulty_rating": 1,
-      "cost": 100,
-      "daily_upkeep": 200,
-      "reliability": 0.9,
-      "noisiness": 0.3,
       "atmosphere": 0.6,
       "x": -1,
       "y": -1,

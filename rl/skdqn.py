@@ -10,7 +10,7 @@ import numpy as np
 import csv
 import pickle
 
-WIDTH = 15
+WIDTH = 10
 HEIGHT = 10
 
 if __name__ == "__main__":
