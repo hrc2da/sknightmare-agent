@@ -47,9 +47,9 @@ class Environment:
         # hard, we can fix to have min 1 of each table, eq, staff
         gridw = 5
         gridh = 5
-        num_tables = np.random.randint(5)
-        num_eq = np.random.randint(5)
-        num_staff = np.random.randint(5)
+        num_tables = 1 + np.random.randint(4)
+        num_eq = 1 + np.random.randint(4)
+        num_staff = 1 + np.random.randint(4)
         tables = []
         eq = []
         staff = []
@@ -187,8 +187,8 @@ class Environment:
                 #table["attributes"] = {"x":table["x"], "y":table["y"]}
                 table["attributes"] = {}
                 for attr in table:
-                    table = self.set_name(table,"table")
                     table["attributes"][attr] = table[attr]
+            table = self.set_name(table,"table")
             self.restaurant_layout.append(self.RestaurantItem("table",table))
         for eq in equipment:
         #     eq["x"] = -1
