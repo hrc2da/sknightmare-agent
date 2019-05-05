@@ -83,12 +83,12 @@ if __name__ == "__main__":
     if args.discount == 'empty':
         discount_rate = 0.9
     else:
-        discount_rate = args.discount
+        discount_rate = float(args.discount)
 
     if args.eps == 'empty':
         eps = 1.0
     else:
-        eps = args.eps
+        eps = float(args.eps)
 
     outcomes = SKOutcomes()
     pd = PreferenceDummy(outcomes,preferences)
