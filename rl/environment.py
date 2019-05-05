@@ -68,7 +68,7 @@ class Environment:
             x = (1.0/gridw)*(np.random.random() + locx)
             y = (1.0/gridh)*(np.random.random() + locy)
             new_table.item = self.set_item_location(new_table.item,x,y,downscale=False)
-            new_table.item = self.set_name(new_table.item,new_table.type)
+            #new_table.item = self.set_name(new_table.item,new_table.type)
             tables.append(new_table.item)
         for e in range(num_eq):
             name = self.eq_names[np.random.randint(len(self.eq_names))]
@@ -77,7 +77,7 @@ class Environment:
             x = (1.0/gridw)*(np.random.random() + locx)
             y = (1.0/gridh)*(np.random.random() + locy)
             new_eq.item = self.set_item_location(new_eq.item,x,y,downscale=False)
-            new_eq.item = self.set_name(new_eq.item,new_eq.type)
+            #new_eq.item = self.set_name(new_eq.item,new_eq.type)
             eq.append(new_eq.item)
         for s in range(num_staff):
             new_staff = deepcopy(self.catalog["staff"])
@@ -85,7 +85,7 @@ class Environment:
             x = (1.0/gridw)*(np.random.random() + locx)
             y = (1.0/gridh)*(np.random.random() + locy)
             new_staff.item = self.set_item_location(new_staff.item,x,y,downscale=False)
-            new_staff.item = self.set_name(new_staff.item,new_staff.type)
+            #new_staff.item = self.set_name(new_staff.item,new_staff.type)
             staff.append(new_staff.item)
         return tables,eq,staff
     def reset(self, init_state = None):
@@ -187,8 +187,8 @@ class Environment:
                 #table["attributes"] = {"x":table["x"], "y":table["y"]}
                 table["attributes"] = {}
                 for attr in table:
-                    table = self.set_name(table,"table")
                     table["attributes"][attr] = table[attr]
+            table = self.set_name(table,"table")
             self.restaurant_layout.append(self.RestaurantItem("table",table))
         for eq in equipment:
         #     eq["x"] = -1
