@@ -30,14 +30,14 @@ class Environment:
     SIZE_SCALAR = 20 # this is just to adjust for the fact that our items are relatively too big for our layout size
     name_delimiter = "___"
 
-    def __init__(self, width, height, tables, equipment, staff, reward_model, table_fp="util/tables.json", eq_fp="util/items.json"):
+    def __init__(self, width, height, tables, equipment, staff, reward_model, table_fp="tables.json", eq_fp="items.json"):
         self.width = width
         self.height = height
         self.action_dims = 4
         self.reward_model = reward_model
-        self.image_writer = ImageWriter(width,height,"util","tables.json", "items.json")
+        self.image_writer = ImageWriter(width,height,"util",table_fp, eq_fp)
         
-        self.populate_catalog("util/tables.json", "util/items.json")
+        self.populate_catalog("util/"+table_fp, "util/"+eq_fp)
         self.initialize_state(tables,equipment,staff)
         self.sim_outcomes = None
     
