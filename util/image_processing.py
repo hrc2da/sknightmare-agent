@@ -247,7 +247,7 @@ class ImageWriter():
 
 if __name__ == "__main__":
     
-    writer = ImageWriter(10, 10)
+    writer = ImageWriter(10, 10,tables_fn='tables_simple.json', equipment_fn='items_simple.json')
     layout = [{
                                     "type": "image",
                                     "size": 30,

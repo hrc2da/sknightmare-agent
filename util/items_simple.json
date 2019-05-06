@@ -1,0 +1,63 @@
+{
+    "1": {
+      "name": "Basic Oven",
+      "type": "image",
+      "size": 25,
+      "path": "svgs/oven.svg",
+      "attributes": {
+        "category": "cooking",
+        "capabilities": {
+          "pizza": {
+            "quality_mean": 0.5,
+            "quality_std": 0.4,
+            "cook_time_mult": 2,
+            "cook_time_std": 0.1
+          }
+        },
+        "path": "svgs/oven.svg",
+        "difficulty_rating": 0.2,
+        "cost": 300,
+        "daily_upkeep": 5,
+        "reliability": 0.2,
+        "noisiness": 0.1,
+        "atmosphere": 0.1,
+        "x": -1,
+        "y": -1,
+        "radius": 0
+      }
+    },
+  
+    "3": {
+      "name": "Brick Pizza Oven",
+      "type": "image",
+      "size": 35,
+      "path": "svgs/kiln.svg",
+      "attributes": {
+        "category": "cooking",
+        "capabilities": {
+          "pizza": {
+            "quality_mean": 0.7,
+            "quality_std": 0.1,
+            "cook_time_mult": 0.8,
+            "cook_time_std": 1
+          },
+          "brick_oven": {
+            "quality_mean": 0.7,
+            "quality_std": 0.1,
+            "cook_time_mult": 0.8,
+            "cook_time_std": 1
+          }
+        },
+        "path": "svgs/kiln.svg",
+        "difficulty_rating": 0.8,
+        "cost": 4000,
+        "daily_upkeep": 10,
+        "reliability": 0.9,
+        "noisiness": 0.2,
+        "atmosphere": 0.6,
+        "x": -1,
+        "y": -1,
+        "radius": 0
+      }
+    }
+  }
