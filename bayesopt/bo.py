@@ -108,7 +108,8 @@ class SKBayesOpt:
             reward = self.evaluator.rate(outcomes)
             self.optimizer.tell(list(outcomes), reward, fit=True)
         else:
-            reward = self.optimizer.base_estimator_.predict(outcomes)
+            reward = self.optimizer.models[-1].predict([list(outcomes)])
+            #reward = self.optimizer.base_estimator_.predict(outcomes)
         return reward
         
     def acquisition_check(self, outcomes):

@@ -151,6 +151,9 @@ if __name__ == "__main__":
             print("This many simulations: {}".format(len(simulations)))
             #this needs to pickle
             pickle.dump(simulations,picklefile)
+        with open(savepath+"reward_{}.pkl".format(time.time()),"wb+") as picklefile:
+            #this needs to pickle
+            pickle.dump(bo.optimizer,picklefile)
     print("finished.")
         
 
